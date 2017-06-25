@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Homematic Explorer</title>
+  <link href="stylesheets/photon.min.css" rel="stylesheet" type="text/css">
+  <link href="stylesheets/main.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+
+<div class="window">
+  <header class="toolbar toolbar-header">
+    <div class="toolbar-actions">
+    <div class="btn-group">
+	CCU IP   <input type="text" id="ccu_ip" />
+    </div>
+    </div>
+  </header>
+  <div class="window-content">
+    <div class="pane-group" id="main_group"><div class="pane-sm sidebar" id="sidebar"></div>
+  </div>
+  </div>
+  <footer class="toolbar toolbar-footer" id="footer_pane">
+  	<div class="toolbar-actions">
+      <div class="form-group" style="max-width: 30%">
+		  <span id="properties_label">Details</span><br />
+		  <div style="max-height:10%" id="element_properties"></div>
+	  </div>
+  </div>
+  </footer>    
+</div>
+  <script src="app.js"></script>
+</body>
+</html>
