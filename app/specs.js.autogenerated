@@ -1,43 +1,5 @@
 (function () {'use strict';
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var chai = require('chai');
-var jetpack = _interopDefault(require('fs-jetpack'));
-
-var __cov_8jpd28SLjCv0ER4BSqdhSQ = (Function('return this'))();
-if (!__cov_8jpd28SLjCv0ER4BSqdhSQ.__coverage__) { __cov_8jpd28SLjCv0ER4BSqdhSQ.__coverage__ = {}; }
-__cov_8jpd28SLjCv0ER4BSqdhSQ = __cov_8jpd28SLjCv0ER4BSqdhSQ.__coverage__;
-if (!(__cov_8jpd28SLjCv0ER4BSqdhSQ['/Users/Thomas/Documents/hm_champion/src/hello_world/hello_world.js'])) {
-   __cov_8jpd28SLjCv0ER4BSqdhSQ['/Users/Thomas/Documents/hm_champion/src/hello_world/hello_world.js'] = {"path":"/Users/Thomas/Documents/hm_champion/src/hello_world/hello_world.js","s":{"1":0,"2":0,"3":0,"4":0},"b":{},"f":{},"fnMap":{},"statementMap":{"1":{"start":{"line":1,"column":7},"end":{"line":3,"column":2}},"2":{"start":{"line":2,"column":2},"end":{"line":2,"column":24}},"3":{"start":{"line":5,"column":7},"end":{"line":7,"column":2}},"4":{"start":{"line":6,"column":2},"end":{"line":6,"column":19}}},"branchMap":{}};
-}
-__cov_8jpd28SLjCv0ER4BSqdhSQ = __cov_8jpd28SLjCv0ER4BSqdhSQ['/Users/Thomas/Documents/hm_champion/src/hello_world/hello_world.js'];
-__cov_8jpd28SLjCv0ER4BSqdhSQ.s['1']++;const greet=()=>{__cov_8jpd28SLjCv0ER4BSqdhSQ.s['2']++;return'Hello World!';};__cov_8jpd28SLjCv0ER4BSqdhSQ.s['3']++;const bye=()=>{__cov_8jpd28SLjCv0ER4BSqdhSQ.s['4']++;return'See ya!';};
-
-var __cov_hpde5DWd2AUzau6wboaGNw = (Function('return this'))();
-if (!__cov_hpde5DWd2AUzau6wboaGNw.__coverage__) { __cov_hpde5DWd2AUzau6wboaGNw.__coverage__ = {}; }
-__cov_hpde5DWd2AUzau6wboaGNw = __cov_hpde5DWd2AUzau6wboaGNw.__coverage__;
-if (!(__cov_hpde5DWd2AUzau6wboaGNw['/Users/Thomas/Documents/hm_champion/src/env.js'])) {
-   __cov_hpde5DWd2AUzau6wboaGNw['/Users/Thomas/Documents/hm_champion/src/env.js'] = {"path":"/Users/Thomas/Documents/hm_champion/src/env.js","s":{"1":0},"b":{},"f":{},"fnMap":{},"statementMap":{"1":{"start":{"line":6,"column":0},"end":{"line":6,"column":60}}},"branchMap":{}};
-}
-__cov_hpde5DWd2AUzau6wboaGNw = __cov_hpde5DWd2AUzau6wboaGNw['/Users/Thomas/Documents/hm_champion/src/env.js'];
-__cov_hpde5DWd2AUzau6wboaGNw.s['1']++;const env=jetpack.cwd(__dirname).read('env.json','json');
-
-describe('hello world', () => {
-  it('greets', () => {
-    chai.expect(greet()).to.equal('Hello World!');
-  });
-
-  it('says goodbye', () => {
-    chai.expect(bye()).to.equal('See ya!');
-  });
-
-  it('should load test environment variables', () => {
-    chai.expect(env.name).to.equal('test');
-    chai.expect(env.description).to.equal('Add here any environment specific stuff you like.');
-  });
-});
-
 // This file is generated automatically.
 // All modifications will be lost.
 

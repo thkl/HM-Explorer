@@ -6,6 +6,7 @@
 import path from 'path';
 import url from 'url';
 import { app, Menu } from 'electron';
+import { mainMenuTemplate } from './menu/main_menu_template';
 import { devMenuTemplate } from './menu/dev_menu_template';
 import { editMenuTemplate } from './menu/edit_menu_template';
 import createWindow from './helpers/window';
@@ -15,7 +16,7 @@ import createWindow from './helpers/window';
 import env from './env';
 
 const setApplicationMenu = () => {
-  const menus = [editMenuTemplate];
+  const menus = [mainMenuTemplate,editMenuTemplate];
   if (env.name !== 'production') {
     menus.push(devMenuTemplate);
   }

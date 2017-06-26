@@ -1,5 +1,8 @@
 const http = require('http')
-	
+const binrpc = require('binrpc')
+const xmlrpc = require('homematic-xmlrpc')
+
+
 class CCUCommunication {
 	
 
@@ -7,6 +10,24 @@ class CCUCommunication {
 	   this.ccuIp = ccuip
 	}
 	
+	
+	sendInterfaceCommand(interfc,command,attributes,callback) {
+	   var client
+	   switch (interfc.type) {
+		    case "BidCos-RF":
+			  client  = binrpc.createClient({ host: interfc.host, port: interfc.port, path: interfc.path})
+			  break;
+	   } 
+	   
+	   console.log("send %s to %s:%s",command,interfc.host,interfc.port)			
+
+	   
+	   client.methodCall(command,attributes , function (error, value) {
+	   	if (callback) {
+		   	callback(error,value)
+	   	}
+	   })
+	}
 	
 	sendRegaCommand(script,callback) {
 		var that = this

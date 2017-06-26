@@ -25,6 +25,10 @@ class WorkspacePane {
 			case 'script':
 			  this.renderScriptContentPane(rootElement);
 			  break
+
+			case 'rssi':
+			  this.renderRssiContentPane(rootElement);
+			  break
 		}
 		this.clearElement("#element_properties");
 		document.querySelector("#properties_label").innerHTML = "";
@@ -111,6 +115,21 @@ class WorkspacePane {
 		
 		
 	}
+	
+	
+
+	renderRssiContentPane(rootElement) {	
+		let panes = [];
+		panes.push(new brightwheel.Pane({attributes: {id: 'pane_ccu_rssi'},
+			  sidebar: false
+		}, [new brightwheel.NavGroup({attributes: {id: 'ccu_rssi'}}, [])]));
+
+		let root = this.clearElement(rootElement);
+		panes.map(function(pane){
+			root.appendChild(pane.element);
+		});
+	}
+	
 	
 	renderInterfaceContentPane(rootElement) {	
 		let panes = [];

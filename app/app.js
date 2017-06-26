@@ -158,6 +158,21 @@ function getCCUInterfaceData(){
 	}
 }
   
+function getCCURSSI() {
+	var ccuIP = document.querySelector('#ccu_ip').value;
+	if (ccuIP) {
+		store.set('ccuIP', ccuIP);
+		ccu.setHost(ccuIP);
+		ccu.loadRssiValues(function(error){
+			if (!error) {
+				new CCUTreeRenderer(ccuIP,ccu).renderRssiInfo('#ccu_rssi');
+			}
+		});
+	} else {
+		dialog.showErrorBox('this will not work','Please enter the ip adress of your ccu');
+	}
+}  
+  
 
 ipc.on('show_device', (event, arg) => {
   var device = ccu.deviceWithID(arg);
@@ -222,6 +237,11 @@ ipc.on('sidebar-click', (event, arg) => {
 
 	  case 'navItem-scripts':
 	  	new WorkspacePane('script').render('#main_group');
+	  break;
+
+	  case 'navItem-rssi':
+	  	new WorkspacePane('rssi').render('#main_group');
+	  	getCCURSSI();
 	  break;
 	  
   }

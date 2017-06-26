@@ -23,7 +23,16 @@ class CCU {
 		return result
 	}
 
-
+	deviceWithAdress(deviceadress) {
+		var result;
+		this.devices.map(function (device){
+			if (device.address==deviceadress) {
+				result = device;
+			}
+		});
+		return result
+	}
+	
 	channelWithID(channelId) {
 		var result;
 		this.channels.map(function (channel){
@@ -77,7 +86,51 @@ class CCU {
 	}
 	
 	setHost(hostname) {
+	   this.ccuIp = hostname;
 	   this.communication.ccuIp = hostname;
+	}
+	
+	loadRssiValues(callback) {
+		// Make sure we have some Devices	
+		var that = this;	
+		if (this.devices.length==0) {
+			this.loadDevices(function(){
+				that.loadRssiValuesInt(callback);
+			});
+		} else {
+			this.loadRssiValuesInt(callback);
+		}
+	}
+	
+	loadRssiValuesInt(callback) {
+
+		let intf = {type:'BidCos-RF',
+					host:this.ccuIp ,
+					port:2001,
+					path:'/' };
+		var that = this;
+		this.communication.sendInterfaceCommand(intf,'rssiInfo',[],function(error,result){
+			
+			if (!error) {
+				
+				var adrs = Object.keys(result);
+				
+				adrs.map(function(devAdr){
+					var device = that.deviceWithAdress(devAdr);
+					if (device) {
+						device.rssi = [];
+						var gate = result[devAdr];
+						Object.keys(gate).map(function(gateAdr){
+							var info = gate[gateAdr];
+							device.rssi.push({'p':gateAdr,'db_in':info[0],'db_out':info[1]});
+						});
+					}
+				});
+				callback(error);
+			} else {
+				callback(error);
+			}
+		});
 	}
 	
 	

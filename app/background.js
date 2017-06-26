@@ -7,6 +7,34 @@ var url = _interopDefault(require('url'));
 var electron = require('electron');
 var jetpack = _interopDefault(require('fs-jetpack'));
 
+const dialog = require('electron').dialog;
+
+const mainMenuTemplate = {
+  label: 'HM-Explorer',
+  submenu: [{
+    label: 'About',
+    accelerator: '',
+    click: function (item, focusedWindow) {
+      if (focusedWindow) {
+        const options = {
+          type: 'info',
+          title: 'About HM-Explorer',
+          buttons: ['Covfefe !'],
+          message: '(c) 2017 by thkl. https://github.com/thkl'
+        };
+        dialog.showMessageBox(focusedWindow, options, function () {});
+     }
+    } 
+   },
+  {
+    label: 'Quit',
+    accelerator: 'CmdOrCtrl+Q',
+    click: () => {
+      electron.app.quit();
+    },
+  }],
+};
+
 const devMenuTemplate = {
   label: 'Development',
   submenu: [{
@@ -22,14 +50,7 @@ const devMenuTemplate = {
     click: () => {
       electron.BrowserWindow.getFocusedWindow().toggleDevTools();
     },
-  },
-  {
-    label: 'Quit',
-    accelerator: 'CmdOrCtrl+Q',
-    click: () => {
-      electron.app.quit();
-    },
-  }],
+  }]
 };
 
 const editMenuTemplate = {
@@ -83,10 +104,10 @@ var createWindow = (name, options) => {
   };
 
   const windowWithinBounds = (windowState, bounds) => {
-    return windowState.x >= bounds.x
-      && windowState.y >= bounds.y
-      && windowState.x + windowState.width <= bounds.x + bounds.width
-      && windowState.y + windowState.height <= bounds.y + bounds.height;
+    return windowState.x >= bounds.x && 
+    	windowState.y >= bounds.y &&
+    	windowState.x + windowState.width <= bounds.x + bounds.widt && 
+      windowState.y + windowState.height <= bounds.y + bounds.height;
   };
 
   const resetToDefaults = () => {
@@ -138,7 +159,7 @@ const env = jetpack.cwd(__dirname).read('env.json', 'json');
 // Special module holding environment variables which you declared
 // in config/env_xxx.json file.
 const setApplicationMenu = () => {
-  const menus = [editMenuTemplate];
+  const menus = [mainMenuTemplate,editMenuTemplate];
   if (env.name !== 'production') {
     menus.push(devMenuTemplate);
   }

@@ -16,24 +16,21 @@ const packDir = jetpack.cwd('./pack');
 const packDirApp = jetpack.cwd('./pack/app');
 
 
-gulp.task('pack', () => {
+gulp.task('bundle', () => {
   return Promise.all([
-    bundle(destDir.path('background.js'), packDirApp.path('background.js')),
-    bundle(destDir.path('app.js'), packDirApp.path('app.js')),
-    bundle(destDir.path('store.js'), packDirApp.path('store.js')),
-    bundle(destDir.path('ccu/ccu_treerenderer.js'), packDirApp.path('ccu/ccu_treerenderer.js')),
-    bundle(destDir.path('ccu/ccu_communication.js'), packDirApp.path('ccu/ccu_communication.js')),
-    bundle(destDir.path('ccu/ccu.js'), packDirApp.path('ccu/ccu.js')),
-    bundle(destDir.path('ui/sidebar.js'), packDirApp.path('ui/sidebar.js')),
-    bundle(destDir.path('ui/workspace_pane.js'), packDirApp.path('ui/workspace_pane.js')),
-    bundle(destDir.path('stylesheets/*'), packDirApp.path('stylesheets')),
-    bundle(destDir.path('fonts/*'), packDirApp.path('fonts')),
-    
+    bundle(srcDir.path('background.js'), destDir.path('background.js')),
+    bundle(srcDir.path('app.js'), destDir.path('app.js')),
+    bundle(srcDir.path('store.js'), destDir.path('store.js')),
+    bundle(srcDir.path('ccu/ccu_treerenderer.js'), destDir.path('ccu/ccu_treerenderer.js')),
+    bundle(srcDir.path('ccu/ccu_communication.js'), destDir.path('ccu/ccu_communication.js')),
+    bundle(srcDir.path('ccu/ccu.js'), destDir.path('ccu/ccu.js')),
+    bundle(srcDir.path('ui/sidebar.js'), destDir.path('ui/sidebar.js')),
+    bundle(srcDir.path('ui/workspace_pane.js'), destDir.path('ui/workspace_pane.js')),
   ]);
 });
 
 
-gulp.task('bundle', () => {
+gulp.task('pack', () => {
   return Promise.all([
     destDir.copy(destDir.path(), packDirApp.path(), { overwrite: true }),
     rootDir.copy(rootDir.path('node_modules'), packDir.path('node_modules'), { overwrite: true }),

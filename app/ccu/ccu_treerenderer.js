@@ -472,6 +472,27 @@ class CCUTreeRenderer {
 	   tabRoot.appendChild(varTable.element);
 
    }
+   
+   renderRssiInfo(rootElement) {
+	   var rssiElements = []; 
+	   var that = this;
+	   this.ccu.devices.map(function(device){
+		   if (device.rssi) {
+		   	device.rssi.map(function(rssiInfo) {
+			   
+			   var pDevice = that.ccu.deviceWithAdress(rssiInfo.p);
+			   
+			   rssiElements.push({'Geraet':device.name + ' (' + device.address + ')',
+				   'Partner': (pDevice) ? pDevice.name + ' (' + pDevice.address + ')' : rssiInfo.p,
+				   'In':(rssiInfo.db_in!=65536) ? rssiInfo.db_in : 'k.Info' ,
+				   'Out':(rssiInfo.db_out!=65536) ? rssiInfo.db_out : 'k.Info'});
+		   	});
+		   }
+	   });
+	   let propTable = new brightwheel.Table({attributes: {id: 'rssi-table'},classNames: ['my-class'],striped: true},rssiElements);
+	   let myTable = this.clearElement(rootElement);
+	   myTable.appendChild(propTable.element);
+   }
 }
 	
 module.exports = CCUTreeRenderer;
