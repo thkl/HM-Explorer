@@ -11,6 +11,7 @@ class CCU {
 	   this.devices = [];
 	   this.channels = [];
 	   this.dataPoints = [];
+	   this.variables = [];
 	}
 	
 	deviceWithID(deviceId) {
@@ -160,6 +161,38 @@ class CCU {
 		});		
 	}
 	
+	loadVariables(callback) {
+		var that = this;
+		let script = 'string varid;boolean df = true;Write(\'{"variables":[\');foreach(varid, dom.GetObject(ID_SYSTEM_VARIABLES).EnumIDs()){object ovar = dom.GetObject(varid);if(df) {df = false;} else { Write(\',\');}Write(\'{\')';
+		
+		script = script + this.scriptPartForElement('id','varid',',');
+		script = script + this.scriptPartForElement('name','ovar.Name()',',');
+		script = script + this.scriptPartForElement('dpInfo','ovar.DPInfo()',',');
+		script = script + this.scriptPartForElement('unerasable','ovar.Unerasable()',',');
+		script = script + this.scriptPartForElement('valuetype','ovar.ValueType()',',');
+		script = script + this.scriptPartForElement('subtype','ovar.ValueSubType()',',');
+		script = script + this.scriptPartForElement('unit','ovar.ValueUnit()',',');
+		script = script + this.scriptPartForElement('valname0','ovar.ValueName0()',',');
+		script = script + this.scriptPartForElement('valname1','ovar.ValueName1()',',');
+		script = script + this.scriptPartForElement('vallist','ovar.ValueList()',',');
+		script = script + this.scriptPartForElement('min','ovar.ValueMin()',',');
+		script = script + this.scriptPartForElement('max','ovar.ValueMin()',',');
+		script = script + this.scriptPartForElement('chnl','ovar.Channel()');
+		
+		script = script +'Write(\'}\');} Write(\']}\');';
+		
+		this.sendScript(script,function(result){
+			try {
+				let json = JSON.parse(result);
+				that.variables = json.variables;
+				if (callback) {
+					callback();
+				}
+	      } catch (e) {
+		    console.error(e);
+		  }
+		});	
+	}
 
 	
 	loadDevices(callback) {
@@ -257,6 +290,19 @@ class CCU {
 		});		
 		
 	}
+
+    testScript(script,callback) {
+	    let command = 'Write( system.SyntaxCheck(\'' + script +'\', \'\', \'\',\'\'));';
+	    this.communication.sendRegaCommand(command,function(result,variables){
+		try {
+		   if (callback) {
+				callback(result,variables);
+		   }
+	      } catch (e) {
+		    console.error(e);
+		  }
+		});	
+    }
 
     sendScript(script,callback) {
 	   

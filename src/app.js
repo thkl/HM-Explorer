@@ -53,6 +53,20 @@ function getCCUDeviceData(){
 	}
 }
 
+function getCCUVariables(){
+	var ccuIP = document.querySelector('#ccu_ip').value
+	if (ccuIP) {
+		store.set('ccuIP', ccuIP);
+		ccu.setHost(ccuIP)
+		ccu.loadVariables(function(){
+			new CCUTreeRenderer(ccuIP,ccu).renderVariables('#ccu_variables')
+		})
+	} else {
+		dialog.showErrorBox('this will not work','Please enter the ip adress of your ccu');
+	}
+}
+
+
 
 function getCCUInterfaceData(){
 	var ccuIP = document.querySelector('#ccu_ip').value
@@ -117,6 +131,17 @@ ipc.on('show_interface', (event, arg) => {
   }  
 })
 
+ipc.on('test_script', (event, arg) => {
+  
+  ccu.testScript(arg,function(result,variables){
+	  if (result=='') {
+		  result = 'Schaut ok aus ....';
+	  }
+	  new CCUTreeRenderer(ccuIP,ccu).renderScriptOutput(result,[])
+  })
+  
+})
+
 
 ipc.on('run_script', (event, arg) => {
   
@@ -125,7 +150,6 @@ ipc.on('run_script', (event, arg) => {
   })
   
 })
-
 
 
 
@@ -153,6 +177,10 @@ ipc.on('sidebar-click', (event, arg) => {
 	  	getCCURSSI()
 	  break;
 	  
+	  case 'navItem-variable':
+	   new WorkspacePane('variables').render('#main_group')
+	   getCCUVariables()
+	  break;
   }
 
 })

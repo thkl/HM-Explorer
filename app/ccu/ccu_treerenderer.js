@@ -493,6 +493,67 @@ class CCUTreeRenderer {
 	   let myTable = this.clearElement(rootElement);
 	   myTable.appendChild(propTable.element);
    }
+
+  renderVariables(rootElement) {
+	   var varElements = []; 
+	   var that = this;
+	   this.ccu.variables.map(function(variable){
+
+	   		var strValueType = 'unbekannt';
+	   		var strValueSubType = 'unbekannt';
+	   		
+	   		switch (parseInt(variable.valuetype)) {
+		   		case 2: 
+		   			strValueType = 'binaer';
+		   		break;
+		   		case 4: 
+		   			strValueType = 'Fliesskommazahl';
+		   		break;
+		   		case 16: 
+		   			strValueType = 'Zahl';
+		   		break;
+		   		case 20: 
+		   			strValueType = 'Text';
+		   		break;
+		   		
+	   		}
+	   		
+	   		switch (parseInt(variable.subtype)) {
+		   		case 23:
+		   		   strValueSubType = 'Anwesenheit';
+		   		   break;
+		   		case 6:
+		   		   strValueSubType = 'Alarm';
+		   		   break;
+		   		case 0:
+		   		   strValueSubType = 'Zahl';
+		   		   break;
+		   		case 2:
+		   		   strValueSubType = 'Logicwert';
+		   		   break;
+		   		case 29:
+		   		   strValueSubType = 'Werteliste';
+		   		   break;
+		   		case 11:
+		   		   strValueSubType = 'Zeichenkette';
+		   		   break;
+		   		
+	   		}
+
+			   varElements.push({
+				   'Id':variable.id,
+				   'Name':variable.name ,
+				   'Typ': strValueType,
+				   'SubTyp': strValueSubType,
+				   'Unit':variable.unit,
+				   'Werteliste':variable.vallist});
+		});
+	   
+	   let propTable = new brightwheel.Table({attributes: {id: 'variable-table'},classNames: ['my-class'],striped: true},varElements);
+	   let myTable = this.clearElement(rootElement);
+	   myTable.appendChild(propTable.element);
+   }
+
 }
 	
 module.exports = CCUTreeRenderer;

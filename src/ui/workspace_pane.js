@@ -26,7 +26,12 @@ class WorkspacePane {
 			case 'rssi':
 			  this.renderRssiContentPane(rootElement)
 			  break
+			  
+			case 'variables':
+			  this.renderVariableContentPane(rootElement)
+			  break;  
 		}
+		
 		this.clearElement("#element_properties")
 		document.querySelector("#properties_label").innerHTML = ""
 	}
@@ -56,7 +61,10 @@ class WorkspacePane {
 */
 		]))
 		
-		
+		scriptFormItems.push(new Button({attributes: {id: 'checkButton',style:'float: left;'},classNames: ['active'], icon: 'check',
+			size: 'large',  
+			text: 'Syntax Check',  type: 'default'}, [])
+		)
 		
 		scriptFormItems.push(new Button({attributes: {id: 'sendButton',style:'float: right;'},classNames: ['active'], icon: 'paper-plane',
 			size: 'large',  
@@ -101,10 +109,15 @@ class WorkspacePane {
 		
 		
 		root.addEventListener('click', function(event){
-			
+			var script = ""
 			if (event.target.id == 'sendButton') {
-				var script = document.querySelector("#script_text").value
+			    script = document.querySelector("#script_text").value
 				ipc.send('run_script', script)
+			}
+			
+			if (event.target.id == 'checkButton') {
+			    script = document.querySelector("#script_text").value
+				ipc.send('test_script', script)
 			}
 			
 		})
@@ -127,7 +140,19 @@ class WorkspacePane {
 		})
 	}
 	
-	
+	renderVariableContentPane(rootElement) {	
+		let panes = []
+		panes.push(new Pane({attributes: {id: 'pane_ccu_variables'},
+			  sidebar: false
+		}, [new NavGroup({attributes: {id: 'ccu_variables'}}, [])]))
+
+		let root = this.clearElement(rootElement)
+		panes.map(function(pane){
+			root.appendChild(pane.element)
+		})
+	}
+
+
 	renderInterfaceContentPane(rootElement) {	
 		let panes = []
 		panes.push(new Pane({attributes: {id: 'pane_ccu_interface_tree'},
