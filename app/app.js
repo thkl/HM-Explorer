@@ -122,6 +122,7 @@ const WorkspacePane = require('./ui/workspace_pane.js');
 const manifest = appDir.read('package.json', 'json');
 
 var ccu = new CCU();
+var lastScript = 'WriteLine("Hello World");';
 
 const store = new Store({
 	configName: 'user-preferences',
@@ -234,6 +235,11 @@ ipc.on('test_script', (event, arg) => {
 });
 
 
+ipc.on('send_clipboard',(event,arg) => {
+	const {clipboard} = require('electron');
+	clipboard.writeText(arg);
+});
+
 ipc.on('run_script', (event, arg) => {
   
   ccu.sendScriptAndParseAll(arg,function(result,variables){
@@ -245,6 +251,14 @@ ipc.on('run_script', (event, arg) => {
 
 
 ipc.on('sidebar-click', (event, arg) => {
+	
+	// Check Scripttext 
+	
+	
+	var scriptElement = document.querySelector('#script_text');
+	if (scriptElement) {
+		lastScript = scriptElement.value;
+	}
 	
   switch (arg) {
 	 
@@ -261,6 +275,12 @@ ipc.on('sidebar-click', (event, arg) => {
 
 	  case 'navItem-scripts':
 	  	new WorkspacePane('script').render('#main_group');
+	  	scriptElement = document.querySelector('#script_text');
+	  	// restore Script
+	  	if (scriptElement) {
+		   scriptElement.value  = lastScript;
+		}
+		new CCUTreeRenderer(ccuIP,ccu).renderScriptHintButtons();
 	  break;
 
 	  case 'navItem-rssi':

@@ -1,4 +1,4 @@
-import { ListGroup,ListGroupItem,Label,Image,Table } from 'brightwheel'
+import { ListGroup,ListGroupItem,Label,Image,Table,Button,FormGroup } from 'brightwheel'
 const ipc = require('electron').ipcRenderer
 
 class CCUTreeRenderer {
@@ -185,7 +185,7 @@ class CCUTreeRenderer {
 			   ipc.send('show_interface', id)
 		   }
 	   })
-	   
+	   this.renderFooterScriptButtons([]);
 	}
    }
 
@@ -203,6 +203,7 @@ class CCUTreeRenderer {
 
 	   let myTable = this.clearElement("#element_properties")
 	   myTable.appendChild(propTable.element)
+	   this.renderFooterScriptButtons([]);
    }
 
 
@@ -261,7 +262,7 @@ class CCUTreeRenderer {
 			   ipc.send('show_device', id)
 		   }
 	   })
-	   
+	   this.renderFooterScriptButtons([]);
 	}
    }
 
@@ -339,11 +340,19 @@ class CCUTreeRenderer {
 		   }
 
 	   })
+	   this.renderFooterScriptButtons([]);
 	}
    }
 
    dataPointInfo(dp) {
 	   var propElements = []; 
+	   
+	   var actions = [
+		   'object obj = dom.GetObject(\''+dp.name+'\');',
+		   'var state = dom.GetObject(\''+dp.name+'\').State();',
+		   'dom.GetObject(\''+dp.name+'\').State(xxx);'
+	   ]
+	   
 	   propElements.push({property:"ID",value:dp.id})
 	   propElements.push({property:"Name",value:dp.name})
 	   propElements.push({property:"Typ",value:dp.type})
@@ -357,6 +366,7 @@ class CCUTreeRenderer {
 
 	   let myTable = this.clearElement("#element_properties")
 	   myTable.appendChild(propTable.element)
+	   this.renderFooterScriptButtons(actions);
    }
 
 
@@ -425,8 +435,10 @@ class CCUTreeRenderer {
 		   }
 
 	   })
+	   this.renderFooterScriptButtons([]);
 	} else {
 	   let myNode = this.clearElement(rootElement)
+	   this.renderFooterScriptButtons([]);
 	}
    }
 
@@ -489,8 +501,36 @@ class CCUTreeRenderer {
 	   let propTable = new Table({attributes: {id: 'rssi-table'},classNames: ['my-class'],striped: true},rssiElements);
 	   let myTable = this.clearElement(rootElement)
 	   myTable.appendChild(propTable.element)
+	   this.renderFooterScriptButtons([]);
    }
 
+  renderFooterScriptButtons(actions) {
+	var scriptId = 0
+	let myAction = this.clearElement('#element_action')
+	actions.map(function (cmd){
+	let button = new Button({attributes: {id: 'script-'+scriptId},classNames: ['active'], icon: 'star',
+			size: 'large',  
+			text: cmd ,  type: 'default'}, [])
+
+    let frm = new FormGroup({attributes: {id: 'group'+scriptId,style:'width:100%;height:100%'},classNames: ['pull-left']}, [button])
+	myAction.appendChild(frm.element)
+
+	frm.element.addEventListener('click', function(event){
+		    ipc.send('send_clipboard',cmd)
+	})		
+
+	scriptId = scriptId + 1
+	})
+  }
+  
+  renderScriptHintButtons() {
+	  var actions = [
+		   'Write("Hello World);',
+		   'WriteLine(state);'
+	   ]
+	   this.renderFooterScriptButtons(actions);
+  }
+ 
   renderVariables(rootElement) {
 	   var varElements = []; 
 	   var that = this

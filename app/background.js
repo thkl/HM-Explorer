@@ -32,7 +32,7 @@ const mainMenuTemplate = {
    {
 	 label : 'Version ' + pjson.version
    },
-  {
+   {
     label: 'Quit',
     accelerator: 'CmdOrCtrl+Q',
     click: () => {
