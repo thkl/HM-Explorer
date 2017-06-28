@@ -1,1 +1,9 @@
-{"last": 0.0.4 , "source": "https://github.com/thkl/HM-Explorer/raw/master/dist/update.asar"}
+{
+  "url": "https://github.com/thkl/HM-Explorer/raw/master/dist/update.asar",
+  "name": "app",
+  "notes": "HM-Explorer Update ",
+  "updated": "2017-06-28T00:00:00.325Z",
+  "version": "0.0.4",
+  "sha1": "7bdaae195fbcccb8d4ee8d303035207d89848973",
+  "md5": "b73d00cae1b5c4c1f41cf7a9f1da8aef"
+}
