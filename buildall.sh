@@ -15,10 +15,15 @@ echo "Old Fashioned zipping action 64bit"
 zip -r -9 -q dist/HM_Explorer-win32-x64.zip HM_Explorer-win32-x64
 echo "Old Fashioned zipping action 32bit"
 zip -r -9 -q dist/HM_Explorer32Bit-win32-ia32.zip HM_Explorer32Bit-win32-ia32
+cp HM_Explorer-win32-x64/resources/app.asar dist/update.asar
+md5 dist/update.asar
+shasum dist/update.asar
+
+gzip dist/update.asar
 
 echo "Removing packaging tmps"
 rm -rf HM_Explorer-darwin-x64/
 rm -rf HM_Explorer-win32-x64/
 rm -rf HM_Explorer32Bit-win32-ia32/
-
+cp src/update.json dist/update.json
 echo "i am done ...."

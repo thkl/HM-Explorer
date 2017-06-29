@@ -2,8 +2,8 @@
   "url": "https://github.com/thkl/HM-Explorer/raw/master/dist/update.asar.gz",
   "name": "app",
   "notes": "HM-Explorer Update ",
-  "updated": "2017-06-28T00:00:00.325Z",
-  "version": "0.0.5",
-  "sha1": "650ac9d990258391828a2d54a0185fd76f11823b",
-  "md5": "faf66729ee9689d4dabc522da815713c"
+  "updated": "2017-06-29T00:00:00.325Z",
+  "version": "0.0.6",
+  "sha1": "6912b30e939e1051db92e3ff1061158568bef277",
+  "md5": "378242686a08903513a7fe49d48f97de"
 }

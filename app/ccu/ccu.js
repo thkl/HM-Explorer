@@ -292,7 +292,8 @@ class CCU {
 	}
 
     testScript(script,callback) {
-	    let command = 'Write( system.SyntaxCheck(\'' + script +'\', \'\', \'\',\'\'));';
+	    script = script.split('\'').join('\\\'');
+	    let command = 'var tx = \'' + script + '\'; Write( system.SyntaxCheck(tx, \'\', \'\',\'\'));';
 	    this.communication.sendRegaCommand(command,function(result,variables){
 		try {
 		   if (callback) {
