@@ -179,6 +179,7 @@ const mainMenuTemplate = {
 		  }
 		  
 		  try {
+			  console.log('Unlink %s',dest);
             FileSystem.unlink(dest, function (err) {
                 if (err) {
                     console.error(err);
@@ -189,16 +190,19 @@ const mainMenuTemplate = {
           }
 		  
 		  try {
+			  console.log('Move %s to %s',updateManifest.from , dest);
             FileSystem.rename(updateManifest.from, dest, function (err) {
                 if (err) {
                     console.error(err);
                 }
+                console.log('Restart');
+                updater.quitAndInstall(1000);
             });
 
         } catch (error) {
              console.error(error);
         }
-        updater.quitAndInstall(1000);
+        
       }
     }
   }]});
