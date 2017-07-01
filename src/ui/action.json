@@ -1,0 +1,43 @@
+{
+  "common" : [{
+	  
+	  ".ID()" : "Ermittelt die ID des Objektes (readonly)",
+	  ".Name()" : "Ermittelt den Namen des Objectes (rw)",
+	  ".Type()" : "Ermittelt den Objekttypen",
+	  ".TypeName()" : "Ermittelt den Namen des Objekttypen"
+	  
+	  }],	
+	
+	
+	
+  "interface": [{
+	  
+	  ".InterfaceInfo()" : "Ermittelt die Bescheibung des Interfaces",
+      ".InterfaceUrl()" : "Zeigt die RPC URL an"	  
+      
+	  }],
+	  
+   "device": [{
+	   ".Channels()" : "Liste der Kanäle (Tab getrennt)",
+	   ".Channels().Count()":"Anzahl Kanäle",
+	   ".Channels().EnumIDs()" : "Liste der Kanal IDs",
+	   ".Channels().EnumUsedIDs()" : "Liste der IDs von benutzen Kanälen",
+	   ".Channels().EnumEnabledIDs()" : "Liste der aktiven Kanäle",
+	   ".Channels().EnumNames()" : "Liste der Kanalnamen",
+	   ".Channels().EnumUsedNames()" : "Liste der Namen von benutzen Kanälen",
+	   ".Channels().EnumEnabledVisibleIDs()" : "Liste der ativen sichtbaren Kanäle",
+	   ".Channels().EnumEnabledNames()":"Liste der aktiven Kanalnamen",
+	   ".Interface()" : "ID des Geräteinterfaces",
+	   ".Enabled()" : "Gerät aktiv ?",
+	   ".Used()" : "Gerät ist in Benutzung",
+	   ".EnumMetaData()" : "Liste der ",
+	   ".Internal()" : "Gerät ist intern",
+	   ".ReadyConfig()" : "Gerät wurde fertig konfiguriert",
+	   ".ReadyConfigChns()" : "Kanäle wurden fertig konfiguriert",
+	   ".Unerasable()" : "Gerät kann nicht gelöscht werden",
+	   ".Visible()" : "Gerät ist sichtbar",
+	   ".UserAccessRights(xxx)" : "Zugriffsrechte der Gruppe xxx"	   
+	   
+	   }]	  	
+	
+}

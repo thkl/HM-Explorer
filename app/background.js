@@ -152,7 +152,7 @@ const mainMenuTemplate = {
           message: '(c) 2017 by thkl. https://github.com/thkl'
         };
         
-        dialog.showMessageBox(focusedWindow, options, function () {});
+        electron.dialog.showMessageBox(focusedWindow, options, function () {});
      }
     } 
    },
@@ -238,7 +238,7 @@ electron.app.on('ready', () => {
     mainWindow.openDevTools();
   }
  
-  const updateURL = 'https://github.com/thkl/HM-Explorer/raw/master/dist/update.json?d='+ new Date(); 
+  const updateURL = 'https://github.com/thkl/HM-Explorer/raw/master/dist/update.json?d=' + String(Math.random()); 
 
   updater.init();
   

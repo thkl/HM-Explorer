@@ -21,15 +21,21 @@
     <div class="pane-group" id="main_group"><div class="pane-sm sidebar" id="sidebar"></div>
   </div>
   </div>
-  <footer class="toolbar toolbar-footer" id="footer_pane">
+  <footer class="toolbar toolbar-footer" id="footer_pane" style="max-height:30%;overflow-x: scroll">
   	<div class="toolbar-actions" style="width:100%">
       <div class="form-group" style="float:left;width:33%;max-width: 33%">
 		  <span id="properties_label">Details</span><br />
-		  <div style="max-height:10%" id="element_properties"></div>
+		  <div style="" id="element_properties"></div>
 	  </div>
-      <div class="form-group" style="margin-left:20px;float:left;width:40%;max-width: 40%">
-		  <span id="action_label">Action (Clipboard)</span><br />
-		  <div style="max-height:10%" id="element_action"></div>
+      
+      <div class="form-group" style="margin-left:20px;float:left;width:33%;max-width: 33%">
+		  <span id="action_label">Objektmethoden:</span><br />
+		  <div id="element_action" style="overflow: scroll"></div>
+	  </div>
+	  
+	  <div class="form-group" style="margin-left:20px;float:left;width:25%;max-width: 25%;">
+		  <span id="method_label">Test:</span><br />
+		  <div id="method_result"></div>
 	  </div>
 	  
   </div>

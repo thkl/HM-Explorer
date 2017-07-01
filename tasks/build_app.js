@@ -26,7 +26,7 @@ gulp.task('bundle', () => {
     bundle(srcDir.path('ccu/ccu.js'), destDir.path('ccu/ccu.js')),
     bundle(srcDir.path('ui/sidebar.js'), destDir.path('ui/sidebar.js')),
     bundle(srcDir.path('ui/workspace_pane.js'), destDir.path('ui/workspace_pane.js')),
-    bundle(srcDir.path('ui/icons.js'), destDir.path('ui/icons.js')),
+    bundle(srcDir.path('ui/icons.js'), destDir.path('ui/icons.js'))
   ]);
 });
 
@@ -58,6 +58,7 @@ gulp.task('environment', () => {
   const configFile = `config/env_${utils.getEnvName()}.json`;
   projectDir.copy(configFile, destDir.path('env.json'), { overwrite: true });
 });
+
 
 gulp.task('watch', () => {
   const beepOnError = (done) => {

@@ -5,7 +5,7 @@
 
 import path from 'path';
 import url from 'url';
-import { app, Menu } from 'electron';
+import { app, Menu,dialog} from 'electron';
 import { devMenuTemplate } from './menu/dev_menu_template';
 import { editMenuTemplate } from './menu/edit_menu_template';
 import createWindow from './helpers/window';
@@ -120,7 +120,7 @@ app.on('ready', () => {
     mainWindow.openDevTools();
   }
  
-  const updateURL = 'https://github.com/thkl/HM-Explorer/raw/master/dist/update.json?d='+ new Date().toISOString(); 
+  const updateURL = 'https://github.com/thkl/HM-Explorer/raw/master/dist/update.json?d=' + String(Math.random()); 
 
   updater.init()
   

@@ -149,6 +149,18 @@ ipc.on('send_clipboard',(event,arg) => {
 	clipboard.writeText(arg)
 })
 
+ipc.on('describe_function',(event,arg)=> {
+	
+	// Build the 3rd footer column
+	var script =  arg
+	new CCUTreeRenderer(ccuIP,ccu).renderScriptMethodTestResult(script,undefined)
+
+	ccu.sendScriptAndParseAll(script,function(result,variables){
+	  let strresult = (variables && (variables.testObject))?variables.testObject:result
+	  new CCUTreeRenderer(ccuIP,ccu).renderScriptMethodTestResult(script,strresult)
+  	})
+})
+
 ipc.on('run_script', (event, arg) => {
   
   ccu.sendScriptAndParseAll(arg,function(result,variables){
@@ -189,7 +201,9 @@ ipc.on('sidebar-click', (event, arg) => {
 	  	if (scriptElement) {
 		   scriptElement.value  = lastScript
 		}
-		new CCUTreeRenderer(ccuIP,ccu).renderScriptHintButtons()
+		let renderer = new CCUTreeRenderer(ccuIP,ccu);
+		renderer.renderCommandScreen('Allgmeine Script Funktionen','',['script'])
+		renderer.renderScriptMethodTestResult(undefined,undefined)
 	  break;
 
 	  case 'navItem-rssi':

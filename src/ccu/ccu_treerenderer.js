@@ -1,5 +1,6 @@
-import { ListGroup,ListGroupItem,Label,Image,Table,Button,FormGroup } from 'brightwheel'
+import { ListGroup,ListGroupItem,Label,Image,Table,Button,FormGroup,Textarea } from 'brightwheel'
 const ipc = require('electron').ipcRenderer
+const fs = require('fs')
 
 class CCUTreeRenderer {
 	
@@ -63,7 +64,7 @@ class CCUTreeRenderer {
 			   ipc.send('show_interface', id)
 		   }
 	   })
-	   this.renderFooterScriptButtons([]);
+	   this.renderScriptMethodTestResult(undefined,undefined)
 	}
    }
 
@@ -81,7 +82,8 @@ class CCUTreeRenderer {
 
 	   let myTable = this.clearElement("#element_properties")
 	   myTable.appendChild(propTable.element)
-	   this.renderFooterScriptButtons([]);
+	   this.renderCommandScreen('Methoden des Interface Objektes','dom.GetObject('+intf.id+')',['common','interface'])
+	   this.renderScriptMethodTestResult(undefined,undefined)
    }
 
 
@@ -140,7 +142,7 @@ class CCUTreeRenderer {
 			   ipc.send('show_device', id)
 		   }
 	   })
-	   this.renderFooterScriptButtons([]);
+	   this.renderScriptMethodTestResult(undefined,undefined)
 	}
    }
 
@@ -218,18 +220,13 @@ class CCUTreeRenderer {
 		   }
 
 	   })
-	   this.renderFooterScriptButtons([]);
+	   this.renderCommandScreen('Methoden des Device Objektes','dom.GetObject('+device.id+')',['common','device'])
+	   this.renderScriptMethodTestResult(undefined,undefined)
 	}
    }
 
    dataPointInfo(dp) {
 	   var propElements = []; 
-	   
-	   var actions = [
-		   'object obj = dom.GetObject(\''+dp.name+'\');',
-		   'var state = dom.GetObject(\''+dp.name+'\').State();',
-		   'dom.GetObject(\''+dp.name+'\').State(xxx);'
-	   ]
 	   
 	   propElements.push({property:"ID",value:dp.id})
 	   propElements.push({property:"Name",value:dp.name})
@@ -244,7 +241,9 @@ class CCUTreeRenderer {
 
 	   let myTable = this.clearElement("#element_properties")
 	   myTable.appendChild(propTable.element)
-	   this.renderFooterScriptButtons(actions);
+	   
+	   this.renderCommandScreen('Methoden des Datapoint Objektes','dom.GetObject('+dp.id+')',['common','datapoint'])
+	   this.renderScriptMethodTestResult(undefined,undefined)
    }
 
 
@@ -313,10 +312,11 @@ class CCUTreeRenderer {
 		   }
 
 	   })
-	   this.renderFooterScriptButtons([]);
+	   this.renderCommandScreen('Methoden des Channel Objektes','dom.GetObject('+channel.id+')',['common','channel'])
+	   this.renderScriptMethodTestResult(undefined,undefined)
 	} else {
 	   let myNode = this.clearElement(rootElement)
-	   this.renderFooterScriptButtons([]);
+	   
 	}
    }
 
@@ -379,34 +379,79 @@ class CCUTreeRenderer {
 	   let propTable = new Table({attributes: {id: 'rssi-table'},classNames: ['my-class'],striped: true},rssiElements);
 	   let myTable = this.clearElement(rootElement)
 	   myTable.appendChild(propTable.element)
-	   this.renderFooterScriptButtons([]);
+	   this.clearCommandScreen()
    }
 
-  renderFooterScriptButtons(actions) {
-	var scriptId = 0
-	let myAction = this.clearElement('#element_action')
-	actions.map(function (cmd){
-	let button = new Button({attributes: {id: 'script-'+scriptId},classNames: ['active'], icon: 'star',
-			size: 'large',  
-			text: cmd ,  type: 'default'}, [])
-
-    let frm = new FormGroup({attributes: {id: 'group'+scriptId,style:'width:100%;height:100%'},classNames: ['pull-left']}, [button])
-	myAction.appendChild(frm.element)
-
-	frm.element.addEventListener('click', function(event){
-		    ipc.send('send_clipboard',cmd)
-	})		
-
-	scriptId = scriptId + 1
-	})
+  clearCommandScreen() {
+  	this.clearElement('#element_action')
+ 	document.querySelector("#action_label").innerHTML = ""
   }
-  
-  renderScriptHintButtons() {
-	  var actions = [
-		   'Write("Hello World);',
-		   'WriteLine(state);'
-	   ]
-	   this.renderFooterScriptButtons(actions);
+
+  renderCommandScreen(strlabel,prefix,elements) {
+	  // first check if we have commands to show
+	  let buffer = fs.readFileSync(__dirname + '/action.json');
+ 	  let actions = JSON.parse(buffer.toString());
+ 	  var methodItems = []
+ 	  document.querySelector("#action_label").innerHTML = strlabel
+ 	  
+ 	  elements.map(function(element){
+	 	  let methods = actions[element]
+	 	  if (methods) {
+	 	  methods.map(function(method){
+	 	  	Object.keys(method).map(function (methodname) {
+		 	  	// we have to use id for that cause i was not able to use data- attributes with etch
+		 	 	methodItems.push(
+		 	 		{'Methode':{attributes:{'id':'0_' + methodname},text:methodname},
+				    'Beschreibung':{attributes:{'id':'1_'+ methodname},text:method[methodname]}})		 	  
+			})
+		  })
+		  }
+ 	  })
+ 	  let myAction = this.clearElement('#element_action')
+	  let table = new Table({attributes: {id: 'method-table',style:'overflow-y: scroll'},classNames: ['my-class'],striped: true},methodItems)
+	  let te = table.element 
+	  te.addEventListener('click', function(event){
+		  let colid = event.target.id
+		  if ((colid.indexOf('0_')>-1) || (colid.indexOf('1_')>-1)) {
+			  // User has clicked on a row so build the right method command and send back to the main process to run
+			 let cmd = ((prefix.length>0) ? 'var testObject = ' + prefix:'') + colid.substr(2) +  ';'
+			 ipc.send('describe_function',cmd)
+		  }
+		  else {
+			  console.log("Click at %s",event.target)
+		  }
+	  })			
+	 			
+	  myAction.appendChild(te)
+  }
+
+  renderScriptMethodTestResult(script,result) {
+	  let myPane = this.clearElement('#method_result')
+	  let text = ''
+	  if (script) {
+		  text = text + 'Script :\n' + script + '\n'
+	  } else {
+		  return 
+	  }
+	  if (result) {
+		 text = text +'------------\nAntwort der CCU : '  + result
+	  }
+	  // Build TextBox
+	  let myTextarea = new Textarea({attributes: {id: 'area-testoutput',rows:6},
+	  	classNames: ['my-class'],
+	  	text: text
+	  }, []);
+	  myPane.appendChild(myTextarea.element)
+	  
+	  let copyButton = new Button({attributes: {id: 'copyButton',style:'float: left;'},classNames: ['active'],
+			size: 'large',  
+			text: 'Kopiere ' + script,  type: 'default'}, [])
+	  
+	  copyButton.element.addEventListener('click', function(event){
+         ipc.send('send_clipboard',script)
+      })	
+	  
+	  myPane.appendChild(copyButton.element)
   }
  
   renderVariables(rootElement) {
@@ -467,6 +512,8 @@ class CCUTreeRenderer {
 	   let propTable = new Table({attributes: {id: 'variable-table'},classNames: ['my-class'],striped: true},varElements);
 	   let myTable = this.clearElement(rootElement)
 	   myTable.appendChild(propTable.element)
+	   this.renderCommandScreen('Methoden des Variablen Objektes','dom.GetObject(ID_SYSTEM_VARIABLES).Get("Variablename")',['common','variable'])
+       this.renderScriptMethodTestResult(undefined,undefined)
    }
 
 }
