@@ -53,7 +53,16 @@ class CCU {
 		});
 		return result
 	}
-
+	
+	interfaceWithName(interfaceName) {
+		var result;
+		this.interfaces.map(function (ointerface){
+			if (ointerface.Name==interfaceName) {
+				result = ointerface;
+			}
+		});
+		return result
+	}
 	
 	datapointWithID(datapointId) {
 		var result;
@@ -63,6 +72,15 @@ class CCU {
 			}
 		});
 		return result
+	}
+	
+	addInterface(interf) {
+		let t_intf = this.interfaceWithID(interf.id);
+		if (t_intf) {
+			let idx = this.interfaces.indexOf(interf);
+			this.interfaces.slice(idx);
+		}
+		this.interfaces.push(interf);
 	}
 	
 	addChannel(channel) {
@@ -134,6 +152,23 @@ class CCU {
 		});
 	}
 	
+	loadDutyCycle(callback) {
+
+		let intf = {type:'BidCos-RF',
+					host:this.ccuIp ,
+					port:2001,
+					path:'/' };
+		var that = this;
+		this.communication.sendInterfaceCommand(intf,'listBidcosInterfaces',[],function(error,result){
+			
+			if (!error) {
+				callback(result);
+			} else {
+				callback(error);
+			}
+		});
+	}
+	
 	
 	loadInterfaces(callback) {
 		var that = this;
@@ -151,7 +186,10 @@ class CCU {
 		this.sendScript(script,function(result){
 			try {
 				let json = JSON.parse(result);
-				that.interfaces = json.interfaces;
+				json.interfaces.map(function(interfc){
+					that.addInterface(interfc);
+				});
+
 				if (callback) {
 					callback();
 				}
@@ -176,7 +214,7 @@ class CCU {
 		script = script + this.scriptPartForElement('valname1','ovar.ValueName1()',',');
 		script = script + this.scriptPartForElement('vallist','ovar.ValueList()',',');
 		script = script + this.scriptPartForElement('min','ovar.ValueMin()',',');
-		script = script + this.scriptPartForElement('max','ovar.ValueMin()',',');
+		script = script + this.scriptPartForElement('max','ovar.ValueMax()',',');
 		script = script + this.scriptPartForElement('chnl','ovar.Channel()');
 		
 		script = script +'Write(\'}\');} Write(\']}\');';
@@ -335,6 +373,32 @@ class CCU {
 		return 'Write(\'"'+elementName+'": "\' # '+functionName+' # \'"'+leadingComa+'\');'
 	}
 	
+	
+	strValueForOperations(operation) {
+		var result = '';
+		if ((operation & 1)==1) {result = result + 'READ ';}
+		if ((operation & 2)==2) {result = result + 'WRITE ';}
+		if ((operation & 4)==4) {result = result + 'EVENT ';}
+		return '(' + result + ')'
+	}
+
+	strValueForValueType(valueType) {
+		switch (valueType) {
+			case '2' :
+				return '(ivtBinary)'
+				break
+			case '4' : 
+				return '(ivtFloat)'
+				break
+			case '16' :
+				return '(ivtInteger)'
+				break
+			case '20' :
+				return '(ivtString)'
+				break
+		}
+	}
+
 }
 
 module.exports = CCU;

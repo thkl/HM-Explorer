@@ -55,7 +55,8 @@
 	   ".ChnRoom()":"Liefert die Raeume denen der Kanal zugeordnet ist",
 	   ".ChnArchive()":"Ermittelt ob der Kanal protokoliert wird",
 	   ".ChnAESActive()":"Liefert die Info ob der Kanal verschluesselt sendet",
-	   ".ChnDirection()":"Liefert die Kategorie (1 = Sender , 2 = Empfaenger)"
+	   ".ChnDirection()":"Liefert die Kategorie (1 = Sender , 2 = Empfaenger)",
+	   ".DPs().EnumUsedNames()":"Listet die Namen der Datenpunkte auf"
 	}], 
 	
 	"datapoint": [{
@@ -68,9 +69,26 @@
 	  ".State(0)" : "Setzt den Status des DP neu (Bsp. 0)"
 	}],
 	
+	"variable": [{
+	  
+	  ".DPInfo()" : "Gibt die ID des zugeordneten Datenpunktes zurueck",
+	  ".Unerasable()": "Ermittelt ob die Variable geloescht werden kann",
+	  ".ValueType()":"Liefert den Typ der Variable",
+	  ".ValueSubType()":"Liefert den Subtyp der Variable",
+	  ".ValueUnit()":"Ermittelt die Einheit der Variable",
+	  ".ValueName0()":"Liefert den Klartext fuer den Wert 'falsch'",
+	  ".ValueName1()":"Liefert den Klartext fuer den Wert 'wahr'",
+	  ".ValueList()":"Ermittelt die Werteliste",
+	  ".ValueMin()":"Liefert den minimalen Wert",
+	  ".ValueMax()":"Liefert den maximalen Wert",
+	  ".Channel()":"Liefert die ID des zugeordneten Kanals"
+      
+	}],
+	
 	"script": [{
 	  
-	  "Write('Hello World')" : "Gibt den Text Hello World aus"
+	  "Write('Hello World')" : "Gibt den Text Hello World aus",
+	  "foreach (Element,Liste) { }":"Durchlaeuft Liste fuer jedes Element"
       
 	}]
 

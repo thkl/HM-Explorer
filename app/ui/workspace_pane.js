@@ -33,6 +33,10 @@ class WorkspacePane {
 			case 'variables':
 			  this.renderVariableContentPane(rootElement);
 			  break;  
+
+			case 'dutycycle':
+			  this.renderDutyCycleContentPane(rootElement);
+			  break;  
 		}
 		
 		this.clearElement("#element_properties");
@@ -143,11 +147,25 @@ class WorkspacePane {
 		});
 	}
 	
+	
 	renderVariableContentPane(rootElement) {	
 		let panes = [];
 		panes.push(new brightwheel.Pane({attributes: {id: 'pane_ccu_variables'},
 			  sidebar: false
 		}, [new brightwheel.NavGroup({attributes: {id: 'ccu_variables'}}, [])]));
+
+		let root = this.clearElement(rootElement);
+		panes.map(function(pane){
+			root.appendChild(pane.element);
+		});
+	}
+
+	
+	renderDutyCycleContentPane(rootElement) {	
+		let panes = [];
+		panes.push(new brightwheel.Pane({attributes: {id: 'pane_ccu_dutycycle'},
+			  sidebar: false
+		}, [new brightwheel.NavGroup({attributes: {id: 'ccu_dutycycle'}}, [])]));
 
 		let root = this.clearElement(rootElement);
 		panes.map(function(pane){

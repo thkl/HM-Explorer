@@ -307,6 +307,20 @@ ipc.on('sidebar-click', (event, arg) => {
 	   new WorkspacePane('variables').render('#main_group');
 	   getCCUVariables();
 	  break;
+	  
+	  case 'navItem-dutycycle': 
+	 	new WorkspacePane('dutycycle').render('#main_group');
+	 	var ccuIP = document.querySelector('#ccu_ip').value;
+	  	if (ccuIP) {
+			store.set('ccuIP', ccuIP);
+			ccu.setHost(ccuIP);
+			ccu.loadDutyCycle(function(dcinfo){
+				new CCUTreeRenderer(ccuIP,ccu).renderDCInfo('#ccu_dutycycle',dcinfo);
+			});
+		} else {
+			dialog.showErrorBox('this will not work','Please enter the ip adress of your ccu');
+		}
+		break;
   }
 
 });

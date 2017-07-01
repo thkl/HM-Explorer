@@ -230,12 +230,14 @@ class CCUTreeRenderer {
 
    dataPointInfo(dp) {
 	   var propElements = []; 
+	   let strOperations = this.ccu.strValueForOperations(dp.operations);
+	   let strValueType = this.ccu.strValueForValueType(dp.valueType);
 	   
 	   propElements.push({property:"ID",value:dp.id});
 	   propElements.push({property:"Name",value:dp.name});
 	   propElements.push({property:"Typ",value:dp.type});
-	   propElements.push({property:"Operationen",value:dp.operations});
-	   propElements.push({property:"Wertetyp",value:dp.valueType});
+	   propElements.push({property:"Operationen",value:dp.operations + ' ' + strOperations});
+	   propElements.push({property:"Wertetyp",value:dp.valueType + ' ' + strValueType});
 	   propElements.push({property:"Einheit",value:dp.valueUnit});
 	   propElements.push({property:"Protokoliert",value:dp.archive});
 	   
@@ -363,6 +365,21 @@ class CCUTreeRenderer {
 
    }
    
+   
+    renderDCInfo(rootElement,dcinfo) {
+	   var dcElements = []; 
+	   var dcElements = []; 
+	   
+	   dcinfo.map(function(oDcInfo){
+		   dcElements.push({'Adresse':oDcInfo.ADDRESS,'Duty Cycle':oDcInfo.DUTY_CYCLE});
+	   });
+	   let propTable = new brightwheel.Table({attributes: {id: 'table-dc' },classNames: ['my-class'],striped: true},dcElements );
+	   this.clearCommandScreen();
+	   let myTable = this.clearElement(rootElement);
+	   myTable.appendChild(propTable.element);
+	}
+   
+   
    renderRssiInfo(rootElement,sortby='Geraet',order=0) {
 	   var rssiElements = []; 
 	   var that = this;
@@ -373,19 +390,32 @@ class CCUTreeRenderer {
 			   
 			   var pDevice = that.ccu.deviceWithAdress(rssiInfo.p);
 			   
+			   var inClass = 'green';
+			   var outClass = 'green';
+			   
+			   if (rssiInfo.db_in<-100) {inClass = 'yellow';}
+			   if (rssiInfo.db_out<-100) {outClass = 'yellow';}
+			   if (rssiInfo.db_in<-120) {inClass = 'red';}
+			   if (rssiInfo.db_out<-120) {outClass = 'red';}
+			   if (rssiInfo.db_in === 65536) {inClass = 'gray';}
+			   if (rssiInfo.db_out === 65536) {outClass = 'gray';}
+			   
 			   rssiElements.push({'Geraet':device.name ,
 				   'Adresse':  device.address,
 				   'Partner': (pDevice) ? pDevice.name + ' (' + pDevice.address + ')' : rssiInfo.p,
-				   'In':rssiInfo.db_in,
-				   'Out':rssiInfo.db_out});
+				   'In':{attributes:{className:inClass},text:rssiInfo.db_in},
+				   'Out':{attributes:{className:outClass},text:rssiInfo.db_out}});
 		   	});
 		   }
 	   });
 	   // Sort 
 		rssiElements = rssiElements.sort(
 			function (a, b) {
-				let checkA = a[sortby];
-				let checkB = b[sortby];
+				var checkA = a[sortby];
+				var checkB = b[sortby];
+				
+				if (checkA instanceof Object) {checkA = checkA.text;}
+				if (checkB instanceof Object) {checkB = checkB.text;}
 				
 				if ((checkA.constructor.name === 'String') && (checkB.constructor.name === 'String')) {
 				    
@@ -416,8 +446,8 @@ class CCUTreeRenderer {
 	   // Replace In Out 65536 with  'k.Info'
 	   
 	   rssiElements.map(function (element){
-	   		if (element['In']==65536) {element['In']='k.Info';}
-	   		if (element['Out']==65536) {element['Out']='k.Info';}
+	   		if (element['In'].text==65536) {element['In'].text='k.Info';}
+	   		if (element['Out'].text==65536) {element['Out'].text='k.Info';}
 	   });
 	   
 	   let propTable = new brightwheel.Table({attributes: {id: 'rssi-table'},classNames: ['my-class'],striped: true},rssiElements);
@@ -454,6 +484,7 @@ class CCUTreeRenderer {
   clearCommandScreen() {
   	this.clearElement('#element_action');
  	document.querySelector("#action_label").innerHTML = "";
+ 	this.renderScriptMethodTestResult(undefined,undefined);
   }
 
   renderCommandScreen(strlabel,prefix,elements) {
@@ -495,11 +526,15 @@ class CCUTreeRenderer {
   }
 
   renderScriptMethodTestResult(script,result) {
+	  let myLabel = this.clearElement('#method_label');
 	  let myPane = this.clearElement('#method_result');
 	  let text = '';
+	  
 	  if (script) {
+		  myLabel.innerHTML = 'Test';
 		  text = text + 'Script :\n' + script + '\n';
 	  } else {
+		  myLabel.innerHTML = '';
 		  return 
 	  }
 	  if (result) {
@@ -570,17 +605,30 @@ class CCUTreeRenderer {
 	   		}
 
 			   varElements.push({
-				   'Id':variable.id,
-				   'Name':variable.name ,
-				   'Typ': strValueType,
-				   'SubTyp': strValueSubType,
-				   'Unit':variable.unit,
-				   'Werteliste':variable.vallist});
+				   'Id':{attributes:{'id':'0_' + variable.name}, text:variable.id},
+				   'Name':{attributes:{'id':'1_' + variable.name}, text:variable.name},
+				   'Typ': {attributes:{'id':'2_' + variable.name}, text:strValueType},
+				   'SubTyp': {attributes:{'id':'3_' + variable.name}, text:strValueSubType},
+				   'Unit':{attributes:{'id':'4_' + variable.name},text:variable.unit},
+				   'Werteliste':{attributes:{'id':'5_' + variable.name}, text:variable.vallist}});
 		});
 	   
 	   let propTable = new brightwheel.Table({attributes: {id: 'variable-table'},classNames: ['my-class'],striped: true},varElements);
 	   let myTable = this.clearElement(rootElement);
 	   myTable.appendChild(propTable.element);
+	   
+	   myTable.addEventListener('click', function(event){
+		  let colid = event.target.id;
+		  if ((colid.indexOf('0_')>-1) || (colid.indexOf('1_')>-1) ||
+		  		(colid.indexOf('2_')>-1) || (colid.indexOf('3_')>-1) || 
+		  		(colid.indexOf('4_')>-1) || (colid.indexOf('5_')>-1)) {
+		  		let selectedVariable = colid.substr(2);
+		  		that.renderCommandScreen('Methoden des Variablen Objektes ' + selectedVariable,'dom.GetObject(ID_SYSTEM_VARIABLES).Get("'+
+		  		selectedVariable +'")',['common','variable']);
+		  
+		  }
+	   });
+	   
 	   this.renderCommandScreen('Methoden des Variablen Objektes','dom.GetObject(ID_SYSTEM_VARIABLES).Get("Variablename")',['common','variable']);
        this.renderScriptMethodTestResult(undefined,undefined);
    }

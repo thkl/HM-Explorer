@@ -15,6 +15,7 @@ class SidebarRenderer {
 		navElements.push(this.buildElement('devices',false,'lamp','Geraete'));
 		navElements.push(this.buildElement('variable',false,'bucket','Variablen'));
 		navElements.push(this.buildElement('rssi',false,'rss','RSSI'));
+		navElements.push(this.buildElement('dutycycle',false,'gauge','DutyCycle'));
 		navElements.push(this.buildElement('events',false,'sound','Events'));
 		navElements.push(this.buildElement('scripts',false,'doc-text','Scripteditor'));
 
