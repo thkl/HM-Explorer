@@ -51,13 +51,13 @@ const mainMenuTemplate = {
   }
   
   if (update) {
-	menus.push({label: 'Update', submenu: [{label: 'Update HM Explorer', click: () => {
+	menus.push({label: 'Update', submenu: [{label: 'Update HM Explorer'  , click: () => {
       console.log("Update pressed")
       if ((updateManifest.from) && (updateManifest.to)) {
 	      const FileSystem = require('original-fs')
 	      var dest = updateManifest.to
-		  if (!dest.endsWith('/app.asar')) {
-			  dest = dest + '/app.asar'
+		  if (!dest.endsWith(path.sep  + 'app.asar')) {
+			  dest = dest + path.sep +'app.asar'
 		  }
 		  
 		  try {
@@ -73,12 +73,12 @@ const mainMenuTemplate = {
 		  
 		  try {
 			  console.log('Move %s to %s',updateManifest.from , dest)
-            FileSystem.rename(updateManifest.from, dest, function (err) {
-                if (err) {
+			  FileSystem.rename(updateManifest.from, dest, function (err) {
+              if (err) {
                     console.error(err)
-                }
-                console.log('Restart')
-                updater.quitAndInstall(1000)
+              }
+              console.log('Restart')
+              updater.quitAndInstall(1000)
             })
 
         } catch (error) {
@@ -103,7 +103,7 @@ if (env.name !== 'production') {
 
 app.on('ready', () => {
   setApplicationMenu();
-
+  console.log('Path Delimiter %s',path.sep)
   const mainWindow = createWindow('main', {
     width: 1000,
     height: 600,

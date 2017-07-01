@@ -270,8 +270,10 @@ class CCU {
 		
 		script = script + this.scriptPartForElement('id','sChannelId',',');
 		script = script + this.scriptPartForElement('name','oChannel.Name()',',');
+		script = script + 'if (oInterface) {'
 		script = script + this.scriptPartForElement('intf','oInterface.Name()',',');
 		script = script + this.scriptPartForElement('address','oInterface.Name() #\'.\'\ # oChannel.Address()',',');
+		script = script + '}'
 		script = script + this.scriptPartForElement('type','oChannel.HssType()',',');
 		script = script + this.scriptPartForElement('access','oChannel.UserAccessRights(iulOtherThanAdmin)',',');
 		script = script + this.scriptPartForElement('enabled','oChannel.Enabled()');
@@ -301,7 +303,9 @@ class CCU {
 		
 		script = script + this.scriptPartForElement('id','sDpId',',');
 		script = script + this.scriptPartForElement('name','oDP.Name()',',');
+		script = script + 'if (oInterface) {'
 		script = script + this.scriptPartForElement('intf','oInterface.Name()',',');
+		script = script + '}'
 		script = script + this.scriptPartForElement('type','oDP.TypeName()',',');
 		script = script + this.scriptPartForElement('operations','oDP.Operations()',',');
 		script = script + this.scriptPartForElement('valueType','oDP.ValueType()',',');

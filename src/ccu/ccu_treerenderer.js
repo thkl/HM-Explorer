@@ -454,6 +454,7 @@ class CCUTreeRenderer {
 	   
 	   let sortEventListener = function(event){
 		   // remove Listener to prevent infinity loop 
+		    if (event.target.id.indexOf('th_rssi')>-1) {
 	        myTable.removeEventListener('click',sortEventListener)
 		    switch (event.target.id) {
 			    case 'th_rssi-table_0':
@@ -471,6 +472,7 @@ class CCUTreeRenderer {
 			    case 'th_rssi-table_4':
 			        that.renderRssiInfo(rootElement,'Out',(order==0)?1:0)
 					break;
+		    }
 		    }
 	   }
 	   
@@ -555,7 +557,7 @@ class CCUTreeRenderer {
 	  myPane.appendChild(copyButton.element)
   }
  
-  renderVariables(rootElement) {
+  renderVariables(rootElement,sortby='Id',order=0) {
 	   var varElements = []; 
 	   var that = this
 	   this.ccu.variables.map(function(variable){
@@ -601,31 +603,91 @@ class CCUTreeRenderer {
 		   		
 	   		}
 
-			   varElements.push({
-				   'Id':{attributes:{'id':'0_' + variable.name}, text:variable.id},
+			varElements.push({
+				   'Id':{attributes:{'id':'0_' + variable.name}, text:parseInt(variable.id)},
 				   'Name':{attributes:{'id':'1_' + variable.name}, text:variable.name},
 				   'Typ': {attributes:{'id':'2_' + variable.name}, text:strValueType},
 				   'SubTyp': {attributes:{'id':'3_' + variable.name}, text:strValueSubType},
 				   'Unit':{attributes:{'id':'4_' + variable.name},text:variable.unit},
 				   'Werteliste':{attributes:{'id':'5_' + variable.name}, text:variable.vallist}})
-		})
+			})
+	   
+	   
+	   // Sort 
+		varElements = varElements.sort(
+			function (a, b) {
+				var checkA = a[sortby]
+				var checkB = b[sortby]
+				
+				if (checkA instanceof Object) {checkA = checkA.text}
+				if (checkB instanceof Object) {checkB = checkB.text}
+				
+				if ((checkA.constructor.name === 'String') && (checkB.constructor.name === 'String')) {
+				    
+					if (checkA.toUpperCase() < checkB.toUpperCase()) {
+		   				return (order == 0) ? -1 : 1;
+  					}
+  					
+  					if (checkA.toUpperCase() > checkB.toUpperCase() ) {
+		   				return (order == 0) ? 1 : -1;
+  		   			}
+  		   			return 0;
+				
+				} else {
+					
+					if (parseInt(checkA) < parseInt(checkB)) {
+		   				return (order==0)? -1: 1;
+  					}
+  					
+  					if (parseInt(checkA) > parseInt(checkB)) {
+  						return (order==0)? 1: -1;
+  		   			}
+  		   			return 0;
+			    }
+
+			
+  		   		})
+	   
 	   
 	   let propTable = new Table({attributes: {id: 'variable-table'},classNames: ['my-class'],striped: true},varElements);
 	   let myTable = this.clearElement(rootElement)
 	   myTable.appendChild(propTable.element)
 	   
-	   myTable.addEventListener('click', function(event){
-		  let colid = event.target.id
-		  if ((colid.indexOf('0_')>-1) || (colid.indexOf('1_')>-1) ||
+	   let sortEventListener = function(event){
+		   // remove Listener to prevent infinity loop 
+		    let colid = event.target.id
+		    
+		    if (colid.indexOf('th_variable-table')>-1) {
+	        myTable.removeEventListener('click',sortEventListener)
+		    switch (event.target.id) {
+			    case 'th_variable-table_0':
+			        that.renderVariables(rootElement,'Id',(order==0)?1:0)
+					break;
+			    case 'th_variable-table_1':
+			        that.renderVariables(rootElement,'Name',(order==0)?1:0)
+					break;
+			    case 'th_variable-table_2':
+			        that.renderVariables(rootElement,'Typ',(order==0)?1:0)
+					break;
+			    case 'th_variable-table_3':
+			        that.renderVariables(rootElement,'SubTyp',(order==0)?1:0)
+					break;
+			    case 'th_variable-table_4':
+			        that.renderVariables(rootElement,'Unit',(order==0)?1:0)
+					break;
+		    }
+		    }
+		    		 
+			if ((colid.indexOf('0_')>-1) || (colid.indexOf('1_')>-1) ||
 		  		(colid.indexOf('2_')>-1) || (colid.indexOf('3_')>-1) || 
 		  		(colid.indexOf('4_')>-1) || (colid.indexOf('5_')>-1)) {
 		  		let selectedVariable = colid.substr(2)
 		  		that.renderCommandScreen('Methoden des Variablen Objektes ' + selectedVariable,'dom.GetObject(ID_SYSTEM_VARIABLES).Get("'+
 		  		selectedVariable +'")',['common','variable'])
-		  
-		  }
-	   })
+		  	}
+	   }
 	   
+	   myTable.addEventListener('click',sortEventListener )	
 	   this.renderCommandScreen('Methoden des Variablen Objektes','dom.GetObject(ID_SYSTEM_VARIABLES).Get("Variablename")',['common','variable'])
        this.renderScriptMethodTestResult(undefined,undefined)
    }
