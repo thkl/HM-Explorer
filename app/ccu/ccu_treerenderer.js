@@ -363,25 +363,91 @@ class CCUTreeRenderer {
 
    }
    
-   renderRssiInfo(rootElement) {
+   renderRssiInfo(rootElement,sortby='Geraet',order=0) {
 	   var rssiElements = []; 
 	   var that = this;
 	   this.ccu.devices.map(function(device){
 		   if (device.rssi) {
-		   	device.rssi.map(function(rssiInfo) {
+			   
+			device.rssi.map(function(rssiInfo) {
 			   
 			   var pDevice = that.ccu.deviceWithAdress(rssiInfo.p);
 			   
-			   rssiElements.push({'Geraet':device.name + ' (' + device.address + ')',
+			   rssiElements.push({'Geraet':device.name ,
+				   'Adresse':  device.address,
 				   'Partner': (pDevice) ? pDevice.name + ' (' + pDevice.address + ')' : rssiInfo.p,
-				   'In':(rssiInfo.db_in!=65536) ? rssiInfo.db_in : 'k.Info' ,
-				   'Out':(rssiInfo.db_out!=65536) ? rssiInfo.db_out : 'k.Info'});
+				   'In':rssiInfo.db_in,
+				   'Out':rssiInfo.db_out});
 		   	});
 		   }
 	   });
+	   // Sort 
+		rssiElements = rssiElements.sort(
+			function (a, b) {
+				let checkA = a[sortby];
+				let checkB = b[sortby];
+				
+				if ((checkA.constructor.name === 'String') && (checkB.constructor.name === 'String')) {
+				    
+					if (checkA.toUpperCase() < checkB.toUpperCase()) {
+		   				return (order == 0) ? -1 : 1;
+  					}
+  					
+  					if (checkA.toUpperCase() > checkB.toUpperCase() ) {
+		   				return (order == 0) ? 1 : -1;
+  		   			}
+  		   			return 0;
+				
+				} else {
+					
+					if (parseInt(checkA) < parseInt(checkB)) {
+		   				return (order==0)? -1: 1;
+  					}
+  					
+  					if (parseInt(checkA) > parseInt(checkB)) {
+  						return (order==0)? 1: -1;
+  		   			}
+  		   			return 0;
+			    }
+
+			
+  		   		});
+		
+	   // Replace In Out 65536 with  'k.Info'
+	   
+	   rssiElements.map(function (element){
+	   		if (element['In']==65536) {element['In']='k.Info';}
+	   		if (element['Out']==65536) {element['Out']='k.Info';}
+	   });
+	   
 	   let propTable = new brightwheel.Table({attributes: {id: 'rssi-table'},classNames: ['my-class'],striped: true},rssiElements);
+	   
 	   let myTable = this.clearElement(rootElement);
 	   myTable.appendChild(propTable.element);
+	   
+	   let sortEventListener = function(event){
+		   // remove Listener to prevent infinity loop 
+	        myTable.removeEventListener('click',sortEventListener);
+		    switch (event.target.id) {
+			    case 'th_rssi-table_0':
+			        that.renderRssiInfo(rootElement,'Geraet',(order==0)?1:0);
+					break;
+			    case 'th_rssi-table_1':
+			        that.renderRssiInfo(rootElement,'Adresse',(order==0)?1:0);
+					break;
+			    case 'th_rssi-table_2':
+			        that.renderRssiInfo(rootElement,'Partner',(order==0)?1:0);
+					break;
+			    case 'th_rssi-table_3':
+			        that.renderRssiInfo(rootElement,'In',(order==0)?1:0);
+					break;
+			    case 'th_rssi-table_4':
+			        that.renderRssiInfo(rootElement,'Out',(order==0)?1:0);
+					break;
+		    }
+	   };
+	   
+	   myTable.addEventListener('click',sortEventListener );	
 	   this.clearCommandScreen();
    }
 

@@ -265,7 +265,12 @@ electron.app.on('ready', () => {
 	    updateManifest = manifest[0];
 	    setApplicationMenu(true);
 	} else {
-		console.log("missing manifest %s",JSON.stringify(manifest[0]));
+		electron.dialog.showMessageBox(mainWindow,{
+          type: 'info',
+          title: 'You are up todate',
+          buttons: ['Yihaa #Covfefe !'],
+          message: 'You are running the latest and greatest version of Homematic Explorer.'
+        });
 	}
     console.log('completed', manifest, tasks);
   });

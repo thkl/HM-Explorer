@@ -82,14 +82,14 @@ function getCCUInterfaceData(){
 	}
 }
   
-function getCCURSSI() {
+function getCCURSSI(sort,order) {
 	var ccuIP = document.querySelector('#ccu_ip').value
 	if (ccuIP) {
 		store.set('ccuIP', ccuIP);
 		ccu.setHost(ccuIP)
 		ccu.loadRssiValues(function(error){
 			if (!error) {
-				new CCUTreeRenderer(ccuIP,ccu).renderRssiInfo('#ccu_rssi')
+				new CCUTreeRenderer(ccuIP,ccu).renderRssiInfo('#ccu_rssi',sort,order)
 			}
 		})
 	} else {
@@ -124,6 +124,7 @@ ipc.on('show_datapoint', (event, arg) => {
 	  new CCUTreeRenderer(ccuIP,ccu).dataPointInfo(dp)	
   }  
 })
+
 
 ipc.on('show_interface', (event, arg) => {
   var intf = ccu.interfaceWithID(arg);
