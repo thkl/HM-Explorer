@@ -2,10 +2,10 @@
   "common" : [{
 	  
 	  ".ID()" : {"hint" : "Ermittelt die ID des Objektes (readonly)" },
-	  ".Name()" : {"hint" : "Ermittelt den Namen des Objectes (rw)"},
+	  ".Name()" : {"hint" : "Ermittelt den Namen des Objektes (rw)"},
 	  ".Type()" : {"hint" : "Ermittelt den Objekttypen"},
 	  ".TypeName()" : {"hint" : "Ermittelt den Namen des Objekttypen"},
-	  ".IsTypeOf(OT_DEVICE)": {"hint" : "Ermittelt ob das Objet dem Typ OT_DEVICE (bsp) entspricht"},
+	  ".IsTypeOf(OT_DEVICE)": {"hint" : "Ermittelt ob das Objekt dem Typ OT_DEVICE (bsp) entspricht"},
 	  ".State()": {"hint" : "Liefert den Zustand des Objektes"}
 	  
 	  }],	
@@ -20,66 +20,66 @@
 	  }],
 	  
    "device": [{
-	   ".Channels()" : {"hint" : "Liste der Kanaele (Tab getrennt)"},
-	   ".Channels().Count()":{"hint" : "Anzahl Kanaele"},
+	   ".Channels()" : {"hint" : "Liste der Kanäle (Tab getrennt)"},
+	   ".Channels().Count()":{"hint" : "Anzahl Kanäle"},
 	   ".Channels().EnumIDs()" : {"hint" : "Liste der Kanal IDs"},
-	   ".Channels().EnumUsedIDs()" : {"hint" : "Liste der IDs von benutzen Kanaelen"},
-	   ".Channels().EnumEnabledIDs()" : {"hint" : "Liste der aktiven Kanaele"},
+	   ".Channels().EnumUsedIDs()" : {"hint" : "Liste der IDs von benutzen Kanälen"},
+	   ".Channels().EnumEnabledIDs()" : {"hint" : "Liste der aktiven Kanäle"},
 	   ".Channels().EnumNames()" : {"hint" : "Liste der Kanalnamen"},
-	   ".Channels().EnumUsedNames()" : {"hint" : "Liste der Namen von benutzen Kanaelen"},
-	   ".Channels().EnumEnabledVisibleIDs()" : {"hint" : "Liste der ativen sichtbaren Kanaele"},
+	   ".Channels().EnumUsedNames()" : {"hint" : "Liste der Namen von benutzen Kanälen"},
+	   ".Channels().EnumEnabledVisibleIDs()" : {"hint" : "Liste der ativen sichtbaren Kanäle"},
 	   ".Channels().EnumEnabledNames()":{"hint" : "Liste der aktiven Kanalnamen"},
-	   ".Interface()" : {"hint" : "ID des Geraeteinterfaces"},
-	   ".Enabled()" : {"hint" : "Geraet aktiv ?"},
-	   ".Used()" : {"hint" : "Geraet ist in Benutzung"},
+	   ".Interface()" : {"hint" : "ID des Geräteinterfaces"},
+	   ".Enabled()" : {"hint" : "Gerät aktiv ?"},
+	   ".Used()" : {"hint" : "Gerät ist in Benutzung"},
 	   ".EnumMetaData()" : {"hint" : "Liste der "},
-	   ".Internal()" : {"hint" : "Geraet ist intern"},
-	   ".ReadyConfig()" : {"hint" : "Geraet wurde fertig konfiguriert"},
-	   ".ReadyConfigChns()" : {"hint" : "Kanaele wurden fertig konfiguriert"},
-	   ".Unerasable()" : {"hint" : "Geraet kann nicht geloescht werden"},
-	   ".Visible()" : {"hint" : "Geraet ist sichtbar"},
+	   ".Internal()" : {"hint" : "Gerät ist intern"},
+	   ".ReadyConfig()" : {"hint" : "Gerät wurde fertig konfiguriert"},
+	   ".ReadyConfigChns()" : {"hint" : "Kanäle wurden fertig konfiguriert"},
+	   ".Unerasable()" : {"hint" : "Gerät kann nicht gelöscht werden"},
+	   ".Visible()" : {"hint" : "Gerät ist sichtbar"},
 	   ".UserAccessRights(xxx)" : {"hint" : "Zugriffsrechte der Gruppe xxx"},
-	   ".Interface()":{"hint" : "Ermittelt das Interface (ID) des Geraetes"},
+	   ".Interface()":{"hint" : "Ermittelt das Interface (ID) des Gerätes"},
 	   ".Address()":{"hint" : "Ermittelt die Adresse(Seriennummer)"},
-	   ".HssType()":{"hint" : "Liefert die Kurzbezeichnung des HomeMatic Geraetetyps"}	   
+	   ".HssType()":{"hint" : "Liefert die Kurzbezeichnung des HomeMatic Gerätetyps"}	   
 	   }],
 	   
     "channel": [{
-	   ".Device()" : {"hint" : "Liefert die ID des Geraet des Kanals"},
+	   ".Device()" : {"hint" : "Liefert die ID des Geräts des Kanals"},
 	   ".DPs()":{"hint" : "Liste der Datenpunkte des Kanals"},
 	   ".Interface()":{"hint" : "Ermittelt das Interface des Kanals"},
 	   ".Address()":{"hint" : "Ermittelt die Adresse"},
 	   ".DPByHssDP(xx)":{"hint" : "Liefert das Datenpunktobjekt des Kanals mit dem Namen xx"},
 	   ".ChnFunction()":{"hint" : "Liefert die Gewerke denen der Kanal zugeordnet ist"},
-	   ".ChnRoom()":{"hint" : "Liefert die Raeume denen der Kanal zugeordnet ist"},
+	   ".ChnRoom()":{"hint" : "Liefert die Räume denen der Kanal zugeordnet ist"},
 	   ".ChnArchive()":{"hint" : "Ermittelt ob der Kanal protokoliert wird"},
-	   ".ChnAESActive()":{"hint" : "Liefert die Info ob der Kanal verschluesselt sendet"},
-	   ".ChnDirection()":{"hint" : "Liefert die Kategorie (1 = Sender , 2 = Empfaenger)"},
+	   ".ChnäSActive()":{"hint" : "Liefert die Info ob der Kanal verschlüsselt sendet"},
+	   ".ChnDirection()":{"hint" : "Liefert die Kategorie (1 = Sender , 2 = Empfänger)"},
 	   ".DPs().EnumUsedNames()":{"hint" : "Listet die Namen der Datenpunkte auf"}
 	}], 
 	
 	"datapoint": [{
-	  ".ValueType()" : {"hint" : "Ermittelt den Typ des Wertes fuer den Datenpunkt"},
+	  ".ValüType()" : {"hint" : "Ermittelt den Typ des Wertes für den Datenpunkt"},
 	  ".Channel()" : {"hint" : "Ermittelt die ID des Kanals des Datenpunktes"},
-	  ".Value()" : {"hint" : "Ermittelt den der CCU zuletzt bekannten Wert des DP"},
-	  ".LastValue()" : {"hint" : "Ermittelt den vor der letzten Akt. gueltigen Wert des DP "},
+	  ".Valü()" : {"hint" : "Ermittelt den der CCU zuletzt bekannten Wert des DP"},
+	  ".LastValü()" : {"hint" : "Ermittelt den vor der letzten Akt. gültigen Wert des DP "},
 	  ".Operations()" : {"hint" : "Liefert die Operationen die der DP erlaubt"},
-	  ".Timestamp()" : {"hint" : "Ermittelt den Zeitpunkt der letzten Aenderung"},
+	  ".Timestamp()" : {"hint" : "Ermittelt den Zeitpunkt der letzten änderung"},
 	  ".State(0)" : {"hint" : "Setzt den Status des DP neu (Bsp. 0)","execute":false}
 	}],
 	
 	"variable": [{
 	  
-	  ".DPInfo()" : {"hint" : "Gibt die ID des zugeordneten Datenpunktes zurueck"},
-	  ".Unerasable()": {"hint" : "Ermittelt ob die Variable geloescht werden kann"},
-	  ".ValueType()":{"hint" : "Liefert den Typ der Variable"},
-	  ".ValueSubType()":{"hint" : "Liefert den Subtyp der Variable"},
-	  ".ValueUnit()":{"hint" : "Ermittelt die Einheit der Variable"},
-	  ".ValueName0()":{"hint" : "Liefert den Klartext fuer den Wert \"falsch\""},
-	  ".ValueName1()":{"hint" : "Liefert den Klartext fuer den Wert \"wahr\""},
-	  ".ValueList()":{"hint" : "Ermittelt die Werteliste"},
-	  ".ValueMin()":{"hint" : "Liefert den minimalen Wert"},
-	  ".ValueMax()":{"hint" : "Liefert den maximalen Wert"},
+	  ".DPInfo()" : {"hint" : "Gibt die ID des zugeordneten Datenpunktes zurück"},
+	  ".Unerasable()": {"hint" : "Ermittelt ob die Variable gelöscht werden kann"},
+	  ".ValüType()":{"hint" : "Liefert den Typ der Variable"},
+	  ".ValüSubType()":{"hint" : "Liefert den Subtyp der Variable"},
+	  ".ValüUnit()":{"hint" : "Ermittelt die Einheit der Variable"},
+	  ".ValüName0()":{"hint" : "Liefert den Klartext für den Wert \"falsch\""},
+	  ".ValüName1()":{"hint" : "Liefert den Klartext für den Wert \"wahr\""},
+	  ".ValüList()":{"hint" : "Ermittelt die Werteliste"},
+	  ".ValüMin()":{"hint" : "Liefert den minimalen Wert"},
+	  ".ValüMax()":{"hint" : "Liefert den maximalen Wert"},
 	  ".Channel()":{"hint" : "Liefert die ID des zugeordneten Kanals"}
       
 	}],
@@ -87,7 +87,7 @@
 	"script": [{
 	  
 	  "Write(\"Hello World\")" : {"hint" : "Gibt den Text Hello World aus"},
-	  "foreach (Element,Liste) { }":{"hint" : "Durchlaeuft Liste fuer jedes Element"}
+	  "foreach (Element,Liste) { }":{"hint" : "Durchläuft Liste für jedes Element"}
       
 	}]
 

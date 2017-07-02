@@ -32,6 +32,8 @@ class CCUCommunication {
 	}
 	
 	sendRegaCommand(script,callback) {
+		var encoding = require("encoding");
+		script = encoding.convert(script, "binary");
 		var that = this;
 		var options = {
 			host: this.ccuIp,
@@ -39,12 +41,12 @@ class CCUCommunication {
 			path: '/tclrega.exe',
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
 				'Content-Length': Buffer.byteLength(script)
 			}
 		};
 		
-		console.log('CCU at Rega Command :%s',script);
+		
+		console.log('CCU at Rega Command :%s',script.toString());
 	
 		var request = http.request(options, function(response) {
 		var data = '';
@@ -57,7 +59,7 @@ class CCUCommunication {
       	});
       
 	  	response.on('end', function() {
-     	   var pos = data.lastIndexOf('<xml><exec>');
+		   var pos = data.lastIndexOf('<xml><exec>');
 	 	   var tx = (data.substring(0, pos));
 	 	   var vars = data.substr(pos);
 	 	   console.log('CCU Rega Response :%s',tx);

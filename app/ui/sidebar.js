@@ -12,7 +12,7 @@ class SidebarRenderer {
 		
 		
 		navElements.push(this.buildElement('interface',false,'flow-cascade','Interface'));
-		navElements.push(this.buildElement('devices',false,'lamp','Geraete'));
+		navElements.push(this.buildElement('devices',false,'lamp','Geräte'));
 		navElements.push(this.buildElement('variable',false,'bucket','Variablen'));
 		navElements.push(this.buildElement('rssi',false,'rss','RSSI'));
 		navElements.push(this.buildElement('dutycycle',false,'gauge','DutyCycle'));

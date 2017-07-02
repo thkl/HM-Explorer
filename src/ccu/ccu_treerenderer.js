@@ -71,12 +71,12 @@ class CCUTreeRenderer {
 
    interfaceInfo(intf) {
 	   var propElements = []; 
-	   propElements.push({property:"ID",value:intf.id})
-	   propElements.push({property:"Name",value:intf.name})
-	   propElements.push({property:"Typ",value:intf.type})
-	   propElements.push({property:"Typname",value:intf.typename})
-	   propElements.push({property:"Info",value:intf.info})
-	   propElements.push({property:"URL",value:intf.url})
+	   propElements.push({'Eigenschaft':"ID",'Wert':intf.id})
+	   propElements.push({'Eigenschaft':"Name",'Wert':intf.name})
+	   propElements.push({'Eigenschaft':"Typ",'Wert':intf.type})
+	   propElements.push({'Eigenschaft':"Typname",'Wert':intf.typename})
+	   propElements.push({'Eigenschaft':"Info",'Wert':intf.info})
+	   propElements.push({'Eigenschaft':"URL",'Wert':intf.url})
 	   let propTable = new Table({attributes: {id: 'table-object-properties', sticky:true},classNames: ['my-class'],striped: true},propElements );
 	   document.querySelector("#properties_label").innerHTML = "Details Interface " + intf.name
 	   let myTable = this.clearElement("#element_properties")
@@ -217,18 +217,18 @@ class CCUTreeRenderer {
 	   
 	   var propElements = [];
 	   
-	   propElements.push({property:"ID",value:device.id})
-	   propElements.push({property:"Name",value:device.name})
-	   propElements.push({property:"Typ",value:device.type})
-	   propElements.push({property:"Adresse",value:device.address})
-	   propElements.push({property:"Erstellt",value:device.creatingCompleted})
-	   propElements.push({property:"aktiv",value:device.enabled})
-	   propElements.push({property:"Intern",value:device.internal})
-	   propElements.push({property:"Geraet konfiguriert",value:device.readyConfig})
-	   propElements.push({property:"Kanaele konfiguriert",value:device.readyConfigChannels})
-	   propElements.push({property:"Gesperrt",value:device.locked})
-	   propElements.push({property:"Sichtbar",value:device.visible})
-	   propElements.push({property:"In Benutzung",value:device.used})
+	   propElements.push({'Eigenschaft':"ID",'Wert':device.id})
+	   propElements.push({'Eigenschaft':"Name",'Wert':device.name})
+	   propElements.push({'Eigenschaft':"Typ",'Wert':device.type})
+	   propElements.push({'Eigenschaft':"Adresse",'Wert':device.address})
+	   propElements.push({'Eigenschaft':"Erstellt",'Wert':device.creatingCompleted})
+	   propElements.push({'Eigenschaft':"aktiv",'Wert':device.enabled})
+	   propElements.push({'Eigenschaft':"Intern",'Wert':device.internal})
+	   propElements.push({'Eigenschaft':"Gerät konfiguriert",'Wert':device.readyConfig})
+	   propElements.push({'Eigenschaft':"Kanäle konfiguriert",'Wert':device.readyConfigChannels})
+	   propElements.push({'Eigenschaft':"Gesperrt",'Wert':device.locked})
+	   propElements.push({'Eigenschaft':"Sichtbar",'Wert':device.visible})
+	   propElements.push({'Eigenschaft':"In Benutzung",'Wert':device.used})
 
 	   let propTable = new Table({attributes: {id: 'table-object-properties'},classNames: ['my-class'],striped: true},propElements );
 	   document.querySelector("#properties_label").innerHTML = "Details Ger&auml;t " + device.name
@@ -268,13 +268,13 @@ class CCUTreeRenderer {
 	   let strOperations = this.ccu.strValueForOperations(dp.operations)
 	   let strValueType = this.ccu.strValueForValueType(dp.valueType)
 	   
-	   propElements.push({property:"ID",value:dp.id})
-	   propElements.push({property:"Name",value:dp.name})
-	   propElements.push({property:"Typ",value:dp.type})
-	   propElements.push({property:"Operationen",value:dp.operations + ' ' + strOperations})
-	   propElements.push({property:"Wertetyp",value:dp.valueType + ' ' + strValueType})
-	   propElements.push({property:"Einheit",value:dp.valueUnit})
-	   propElements.push({property:"Protokoliert",value:dp.archive})
+	   propElements.push({'Eigenschaft':"ID",'Wert':dp.id})
+	   propElements.push({'Eigenschaft':"Name",'Wert':dp.name})
+	   propElements.push({'Eigenschaft':"Typ",'Wert':dp.type})
+	   propElements.push({'Eigenschaft':"Operationen",'Wert':dp.operations + ' ' + strOperations})
+	   propElements.push({'Eigenschaft':"Wertetyp",'Wert':dp.valueType + ' ' + strValueType})
+	   propElements.push({'Eigenschaft':"Einheit",'Wert':dp.valueUnit})
+	   propElements.push({'Eigenschaft':"Protokoliert",'Wert':dp.archive})
 	   
 	   let propTable = new Table({attributes: {id: 'table-object-properties'},classNames: ['my-class'],striped: true},propElements );
 	   document.querySelector("#properties_label").innerHTML = "Details Datenpunkt " + dp.name
@@ -400,11 +400,11 @@ class CCUTreeRenderer {
 
    }
    
-   
+   /*
+	   renders the Duty Cycle Info into the rootElement Div
+	   */
     renderDCInfo(rootElement,dcinfo) {
 	   var dcElements = []; 
-	   var dcElements = []; 
-	   
 	   dcinfo.map(function(oDcInfo){
 		   dcElements.push({'Adresse':oDcInfo.ADDRESS,'Duty Cycle':oDcInfo.DUTY_CYCLE})
 	   })
@@ -481,8 +481,8 @@ class CCUTreeRenderer {
 	   // Replace In Out 65536 with  'k.Info'
 	   
 	   rssiElements.map(function (element){
-	   		if (element['In'].text==65536) {element['In'].text='k.Info'}
-	   		if (element['Out'].text==65536) {element['Out'].text='k.Info'}
+	   		if (element.In.text==65536) {element.In.text='k.Info'}
+	   		if (element.Out.text==65536) {element.Out.text='k.Info'}
 	   })
 	   
 	   let propTable = new Table({attributes: {id: 'rssi-table', sticky:true },classNames: ['sticky-table'],striped: true},rssiElements);
@@ -589,7 +589,7 @@ class CCUTreeRenderer {
 	  }
 
 	  if (result) {
-		 scriptOutput = 'Antwort der CCU : '  + result
+		 scriptOutput = 'Antwort der CCU :'  + result
 	  }
 	  // Build TextBox
 	  let myTextarea = new Textarea({attributes: {id: 'area-testinput',rows:3},
@@ -608,7 +608,7 @@ class CCUTreeRenderer {
 	  
 	  let executeButton = new Button({attributes: {id: 'executeButton',style:'float: left;'},classNames: ['active'],
 			size: 'large',  
-			text: 'Ausfuehren',  type: 'default'}, [])
+			text: 'Ausführen',  type: 'default'}, [])
 	  
 	  executeButton.element.addEventListener('click', function(event){
 		  let escript = document.querySelector("#area-testinput").value
@@ -638,7 +638,7 @@ class CCUTreeRenderer {
 	   		
 	   		switch (parseInt(variable.valuetype)) {
 		   		case 2: 
-		   			strValueType = 'binaer'
+		   			strValueType = 'binär'
 		   		break;
 		   		case 4: 
 		   			strValueType = 'Fliesskommazahl'
@@ -663,7 +663,7 @@ class CCUTreeRenderer {
 		   		   strValueSubType = 'Zahl'
 		   		   break;
 		   		case 2:
-		   		   strValueSubType = 'Logicwert'
+		   		   strValueSubType = 'Logikwert'
 		   		   break;
 		   		case 29:
 		   		   strValueSubType = 'Werteliste'
@@ -679,7 +679,7 @@ class CCUTreeRenderer {
 				   'Name':{attributes:{'id':'1_' + variable.name}, text:variable.name},
 				   'Typ': {attributes:{'id':'2_' + variable.name}, text:strValueType},
 				   'SubTyp': {attributes:{'id':'3_' + variable.name}, text:strValueSubType},
-				   'Unit':{attributes:{'id':'4_' + variable.name},text:variable.unit},
+				   'Einheit':{attributes:{'id':'4_' + variable.name},text:variable.unit},
 				   'Werteliste':{attributes:{'id':'5_' + variable.name}, text:variable.vallist}})
 			})
 	   
@@ -753,13 +753,13 @@ class CCUTreeRenderer {
 		  		(colid.indexOf('2_')>-1) || (colid.indexOf('3_')>-1) || 
 		  		(colid.indexOf('4_')>-1) || (colid.indexOf('5_')>-1)) {
 		  		let selectedVariable = colid.substr(2)
-		  		that.renderCommandScreen('Methoden des Variablen Objektes ' + selectedVariable,'dom.GetObject(ID_SYSTEM_VARIABLES).Get("'+
+		  		that.renderCommandScreen('Methoden des Variablen-Objektes ' + selectedVariable,'dom.GetObject(ID_SYSTEM_VARIABLES).Get("'+
 		  		selectedVariable +'")',['common','variable'])
 		  	}
 	   }
 	   
 	   myTable.addEventListener('click',sortEventListener )	
-	   this.renderCommandScreen('Methoden des Variablen Objektes','dom.GetObject(ID_SYSTEM_VARIABLES).Get("Variablename")',['common','variable'])
+	   this.renderCommandScreen('Methoden des Variablen-Objektes','dom.GetObject(ID_SYSTEM_VARIABLES).Get("Variablename")',['common','variable'])
        this.renderScriptMethodTestResult(undefined,undefined)
    }
 
