@@ -68,3 +68,21 @@ th {
 #th_table-object-properties_0 div {
   width: 100%;
 }
+.gutter {
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+.gutter.gutter-horizontal {
+  background-image: url('../img/vertical.png');
+  cursor: ew-resize;
+}
+.gutter.gutter-vertical {
+  background-image: url('../img/horizontal.png');
+  cursor: ns-resize;
+}
+.split.split-horizontal,
+.gutter.gutter-horizontal {
+  height: 100%;
+  float: left;
+}
