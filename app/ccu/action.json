@@ -59,10 +59,10 @@
 	}], 
 	
 	"datapoint": [{
-	  ".ValüType()" : {"hint" : "Ermittelt den Typ des Wertes für den Datenpunkt"},
+	  ".ValueType()" : {"hint" : "Ermittelt den Typ des Wertes für den Datenpunkt"},
 	  ".Channel()" : {"hint" : "Ermittelt die ID des Kanals des Datenpunktes"},
-	  ".Valü()" : {"hint" : "Ermittelt den der CCU zuletzt bekannten Wert des DP"},
-	  ".LastValü()" : {"hint" : "Ermittelt den vor der letzten Akt. gültigen Wert des DP "},
+	  ".Value()" : {"hint" : "Ermittelt den der CCU zuletzt bekannten Wert des DP"},
+	  ".LastValue()" : {"hint" : "Ermittelt den vor der letzten Akt. gültigen Wert des DP "},
 	  ".Operations()" : {"hint" : "Liefert die Operationen die der DP erlaubt"},
 	  ".Timestamp()" : {"hint" : "Ermittelt den Zeitpunkt der letzten änderung"},
 	  ".State(0)" : {"hint" : "Setzt den Status des DP neu (Bsp. 0)","execute":false}
@@ -72,14 +72,14 @@
 	  
 	  ".DPInfo()" : {"hint" : "Gibt die ID des zugeordneten Datenpunktes zurück"},
 	  ".Unerasable()": {"hint" : "Ermittelt ob die Variable gelöscht werden kann"},
-	  ".ValüType()":{"hint" : "Liefert den Typ der Variable"},
-	  ".ValüSubType()":{"hint" : "Liefert den Subtyp der Variable"},
-	  ".ValüUnit()":{"hint" : "Ermittelt die Einheit der Variable"},
-	  ".ValüName0()":{"hint" : "Liefert den Klartext für den Wert \"falsch\""},
-	  ".ValüName1()":{"hint" : "Liefert den Klartext für den Wert \"wahr\""},
-	  ".ValüList()":{"hint" : "Ermittelt die Werteliste"},
-	  ".ValüMin()":{"hint" : "Liefert den minimalen Wert"},
-	  ".ValüMax()":{"hint" : "Liefert den maximalen Wert"},
+	  ".ValueType()":{"hint" : "Liefert den Typ der Variable"},
+	  ".ValueSubType()":{"hint" : "Liefert den Subtyp der Variable"},
+	  ".ValueUnit()":{"hint" : "Ermittelt die Einheit der Variable"},
+	  ".ValueName0()":{"hint" : "Liefert den Klartext für den Wert \"falsch\""},
+	  ".ValueName1()":{"hint" : "Liefert den Klartext für den Wert \"wahr\""},
+	  ".ValueList()":{"hint" : "Ermittelt die Werteliste"},
+	  ".ValueMin()":{"hint" : "Liefert den minimalen Wert"},
+	  ".ValueMax()":{"hint" : "Liefert den maximalen Wert"},
 	  ".Channel()":{"hint" : "Liefert die ID des zugeordneten Kanals"}
       
 	}],
