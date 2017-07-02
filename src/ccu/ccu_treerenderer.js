@@ -1,4 +1,4 @@
-import { ListGroup,ListGroupItem,Label,Image,Table,Button,FormGroup,Textarea } from 'brightwheel'
+import { ListGroup,ListGroupItem,Label,Image,Table,Button,FormGroup,Textarea,Input } from 'brightwheel'
 const ipc = require('electron').ipcRenderer
 const fs = require('fs')
 
@@ -16,6 +16,7 @@ class CCUTreeRenderer {
 	   var that = this
 	   var listItems = [];
 	   if ((this.ccu) && (this.ccu.interfaces)) {
+		   
 	   		this.ccu.interfaces.map(function(ointerface){
 	   		
 	   			let deviceItem = new ListGroupItem({
@@ -44,7 +45,7 @@ class CCUTreeRenderer {
 	   while (myNode.firstChild) {
 	   	myNode.removeChild(myNode.firstChild);
 	   }
-	   
+
 	   myNode.appendChild(myList.element);
 	   
 	   myList.element.addEventListener('click', function(event){
@@ -76,10 +77,8 @@ class CCUTreeRenderer {
 	   propElements.push({property:"Typname",value:intf.typename})
 	   propElements.push({property:"Info",value:intf.info})
 	   propElements.push({property:"URL",value:intf.url})
-	   
-	   let propTable = new Table({attributes: {id: 'table-' + intf.id},classNames: ['my-class'],striped: true},propElements );
+	   let propTable = new Table({attributes: {id: 'table-object-properties', sticky:true},classNames: ['my-class'],striped: true},propElements );
 	   document.querySelector("#properties_label").innerHTML = "Details Interface " + intf.name
-
 	   let myTable = this.clearElement("#element_properties")
 	   myTable.appendChild(propTable.element)
 	   this.renderCommandScreen('Methoden des Interface Objektes','dom.GetObject('+intf.id+')',['common','interface'])
@@ -87,11 +86,33 @@ class CCUTreeRenderer {
    }
 
 
-   renderDevices(rootElement) {
+   renderDevices(rootElement,filter = '') {
 	   var that = this
 	   var listItems = [];
 	   if ((this.ccu) && (this.ccu.devices)) {
-	   		this.ccu.devices.map(function(device){
+		   
+		   
+		   	    // Add Search Header
+		    
+		   	let deviceItem = new ListGroupItem({
+	   				active: false,
+	   				attributes: {id: 'device-header'},
+  					classNames: ['list-group-header'],
+  					header: true
+				}, [new Input({attributes: {id: 'device-search-input'},placeholder: 'Suche',
+					type: 'text'}, [])]
+			)
+				
+			listItems.push(deviceItem)
+		   
+		  	this.ccu.devices.map(function(device){
+	   			
+	   			if (filter.length>0) {
+		   			if (device.name.toUpperCase().indexOf(filter.toUpperCase())==-1) {
+			   			return
+		   			}
+	   			}
+	   			
 	   			var icon = that.getIcon(device.type)
 	   		
 	   			let deviceItem = new ListGroupItem({
@@ -125,8 +146,9 @@ class CCUTreeRenderer {
 	   
 	   myNode.appendChild(myList.element);
 	   
-	   myList.element.addEventListener('click', function(event){
-		   
+	   let myListelement = myList.element
+
+	   let clickEvent = function(event){
 		   if ((event.target.id.indexOf('device-')>-1) || (event.target.id.indexOf('dev_lb-')>-1) || (event.target.id.indexOf('dev_im-')>-1) ) {
 			   let id = event.target.id.substr(7)
 			   let tabLine = 'device-'+id			   
@@ -138,10 +160,26 @@ class CCUTreeRenderer {
    				    	node.classList.remove('active')
 					}		  
 				})
-			   
 			   ipc.send('show_device', id)
 		   }
-	   })
+	   }
+	   
+	   document.querySelector('#device-search-input').value = filter
+	   
+	   let keyPressEvent =  function(event){
+			let target = event.target.id
+			if ((target == 'device-search-input') && (event.keyCode==13)) {
+			   let search = document.querySelector('#device-search-input').value
+			   // first remove old listeners
+			   console.log('Search for %s',search)
+			   myListelement.removeEventListener('keypress',keyPressEvent)
+			   myListelement.removeEventListener('click',clickEvent)
+			   that.renderDevices(rootElement,search)
+			} 
+		}
+	   
+	   myListelement.addEventListener("keypress",keyPressEvent)
+	   myList.element.addEventListener('click', clickEvent)
 	   this.renderScriptMethodTestResult(undefined,undefined)
 	}
    }
@@ -192,7 +230,7 @@ class CCUTreeRenderer {
 	   propElements.push({property:"Sichtbar",value:device.visible})
 	   propElements.push({property:"In Benutzung",value:device.used})
 
-	   let propTable = new Table({attributes: {id: 'table-' + device.id},classNames: ['my-class'],striped: true},propElements );
+	   let propTable = new Table({attributes: {id: 'table-object-properties'},classNames: ['my-class'],striped: true},propElements );
 	   document.querySelector("#properties_label").innerHTML = "Details Ger&auml;t " + device.name
 
 	   let myTable = this.clearElement("#element_properties")
@@ -238,7 +276,7 @@ class CCUTreeRenderer {
 	   propElements.push({property:"Einheit",value:dp.valueUnit})
 	   propElements.push({property:"Protokoliert",value:dp.archive})
 	   
-	   let propTable = new Table({attributes: {id: 'table-' + dp.id},classNames: ['my-class'],striped: true},propElements );
+	   let propTable = new Table({attributes: {id: 'table-object-properties'},classNames: ['my-class'],striped: true},propElements );
 	   document.querySelector("#properties_label").innerHTML = "Details Datenpunkt " + dp.name
 
 	   let myTable = this.clearElement("#element_properties")
@@ -286,7 +324,7 @@ class CCUTreeRenderer {
 	   propElements.push({property:"Typ",value:channel.type})
 	   propElements.push({property:"Adresse",value:channel.address})
 
-	   let propTable = new Table({attributes: {id: 'table-' + channel.id},classNames: ['my-class'],striped: true},propElements );
+	   let propTable = new Table({attributes: {id: 'table-object-properties'},classNames: ['my-class'],striped: true},propElements );
 	   
 	   document.querySelector("#properties_label").innerHTML = "Details Kanal " + channel.name
 
@@ -447,29 +485,30 @@ class CCUTreeRenderer {
 	   		if (element['Out'].text==65536) {element['Out'].text='k.Info'}
 	   })
 	   
-	   let propTable = new Table({attributes: {id: 'rssi-table'},classNames: ['my-class'],striped: true},rssiElements);
+	   let propTable = new Table({attributes: {id: 'rssi-table', sticky:true },classNames: ['sticky-table'],striped: true},rssiElements);
 	   
 	   let myTable = this.clearElement(rootElement)
 	   myTable.appendChild(propTable.element)
 	   
 	   let sortEventListener = function(event){
 		   // remove Listener to prevent infinity loop 
-		    if (event.target.id.indexOf('th_rssi')>-1) {
+		   console.log("Click at %s",event.target)
+		    if (event.target.id.indexOf('div_th_rssi-')>-1) {
 	        myTable.removeEventListener('click',sortEventListener)
 		    switch (event.target.id) {
-			    case 'th_rssi-table_0':
+			    case 'div_th_rssi-table_0':
 			        that.renderRssiInfo(rootElement,'Geraet',(order==0)?1:0)
 					break;
-			    case 'th_rssi-table_1':
+			    case 'div_th_rssi-table_1':
 			        that.renderRssiInfo(rootElement,'Adresse',(order==0)?1:0)
 					break;
-			    case 'th_rssi-table_2':
+			    case 'div_th_rssi-table_2':
 			        that.renderRssiInfo(rootElement,'Partner',(order==0)?1:0)
 					break;
-			    case 'th_rssi-table_3':
+			    case 'div_th_rssi-table_3':
 			        that.renderRssiInfo(rootElement,'In',(order==0)?1:0)
 					break;
-			    case 'th_rssi-table_4':
+			    case 'div_th_rssi-table_4':
 			        that.renderRssiInfo(rootElement,'Out',(order==0)?1:0)
 					break;
 		    }
@@ -491,6 +530,7 @@ class CCUTreeRenderer {
 	  let buffer = fs.readFileSync(__dirname + '/action.json');
  	  let actions = JSON.parse(buffer.toString());
  	  var methodItems = []
+ 	  var methodExecute = []
  	  document.querySelector("#action_label").innerHTML = strlabel
  	  
  	  elements.map(function(element){
@@ -501,20 +541,32 @@ class CCUTreeRenderer {
 		 	  	// we have to use id for that cause i was not able to use data- attributes with etch
 		 	 	methodItems.push(
 		 	 		{'Methode':{attributes:{'id':'0_' + methodname},text:methodname},
-				    'Beschreibung':{attributes:{'id':'1_'+ methodname},text:method[methodname]}})		 	  
+				    'Beschreibung':{attributes:{'id':'1_'+ methodname},text:method[methodname].hint}})	
+				
+				
+				    
+				let execute = true
+				if (method[methodname].execute!=undefined){
+					execute = method[methodname].execute
+				}
+				
+				methodExecute[methodname] = execute 	  
 			})
 		  })
 		  }
  	  })
+ 	  
  	  let myAction = this.clearElement('#element_action')
-	  let table = new Table({attributes: {id: 'method-table',style:'overflow-y: scroll'},classNames: ['my-class'],striped: true},methodItems)
+	  
+	  let table = new Table({attributes: {id: 'method-table'},classNames: ['my-class'],striped: true},methodItems)
 	  let te = table.element 
 	  te.addEventListener('click', function(event){
 		  let colid = event.target.id
 		  if ((colid.indexOf('0_')>-1) || (colid.indexOf('1_')>-1)) {
 			  // User has clicked on a row so build the right method command and send back to the main process to run
 			 let cmd = ((prefix.length>0) ? 'var testObject = ' + prefix:'') + colid.substr(2) +  ';'
-			 ipc.send('describe_function',cmd)
+			 let execute = methodExecute[colid.substr(2)]
+			 ipc.send('describe_function',{script:cmd,'execute':execute})
 		  }
 		  else {
 			  console.log("Click at %s",event.target)
@@ -527,33 +579,52 @@ class CCUTreeRenderer {
   renderScriptMethodTestResult(script,result) {
 	  let myLabel = this.clearElement('#method_label')
 	  let myPane = this.clearElement('#method_result')
-	  let text = ''
+	  let scriptOutput = ''
 	  
 	  if (script) {
 		  myLabel.innerHTML = 'Test'
-		  text = text + 'Script :\n' + script + '\n'
 	  } else {
 		  myLabel.innerHTML = ''
 		  return 
 	  }
+
 	  if (result) {
-		 text = text +'------------\nAntwort der CCU : '  + result
+		 scriptOutput = 'Antwort der CCU : '  + result
 	  }
 	  // Build TextBox
-	  let myTextarea = new Textarea({attributes: {id: 'area-testoutput',rows:6},
+	  let myTextarea = new Textarea({attributes: {id: 'area-testinput',rows:3},
 	  	classNames: ['my-class'],
-	  	text: text
+	  	text: script
 	  }, []);
+	  
 	  myPane.appendChild(myTextarea.element)
+
+	  let myTextareaOutput = new Textarea({attributes: {id: 'area-testoutput',rows:2},
+	  	classNames: ['my-class'],
+	  	text: scriptOutput
+	  }, []);
+	  myPane.appendChild(myTextareaOutput.element)
+
+	  
+	  let executeButton = new Button({attributes: {id: 'executeButton',style:'float: left;'},classNames: ['active'],
+			size: 'large',  
+			text: 'Ausfuehren',  type: 'default'}, [])
+	  
+	  executeButton.element.addEventListener('click', function(event){
+		  let escript = document.querySelector("#area-testinput").value
+          ipc.send('describe_function',{script:escript,'execute':true})
+      })	
 	  
 	  let copyButton = new Button({attributes: {id: 'copyButton',style:'float: left;'},classNames: ['active'],
 			size: 'large',  
 			text: 'Kopiere ' + script,  type: 'default'}, [])
 	  
 	  copyButton.element.addEventListener('click', function(event){
-         ipc.send('send_clipboard',script)
+         let escript = document.querySelector("#area-testinput").value
+         ipc.send('send_clipboard',escript)
       })	
-	  
+
+	  myPane.appendChild(executeButton.element)
 	  myPane.appendChild(copyButton.element)
   }
  
@@ -649,7 +720,7 @@ class CCUTreeRenderer {
   		   		})
 	   
 	   
-	   let propTable = new Table({attributes: {id: 'variable-table'},classNames: ['my-class'],striped: true},varElements);
+	   let propTable = new Table({attributes: {id: 'variable-table', sticky:true },classNames: ['sticky-table'],striped: true},varElements);
 	   let myTable = this.clearElement(rootElement)
 	   myTable.appendChild(propTable.element)
 	   
@@ -657,22 +728,22 @@ class CCUTreeRenderer {
 		   // remove Listener to prevent infinity loop 
 		    let colid = event.target.id
 		    
-		    if (colid.indexOf('th_variable-table')>-1) {
+		    if (colid.indexOf('div_th_variable-table')>-1) {
 	        myTable.removeEventListener('click',sortEventListener)
 		    switch (event.target.id) {
-			    case 'th_variable-table_0':
+			    case 'div_th_variable-table_0':
 			        that.renderVariables(rootElement,'Id',(order==0)?1:0)
 					break;
-			    case 'th_variable-table_1':
+			    case 'div_th_variable-table_1':
 			        that.renderVariables(rootElement,'Name',(order==0)?1:0)
 					break;
-			    case 'th_variable-table_2':
+			    case 'div_th_variable-table_2':
 			        that.renderVariables(rootElement,'Typ',(order==0)?1:0)
 					break;
-			    case 'th_variable-table_3':
+			    case 'div_th_variable-table_3':
 			        that.renderVariables(rootElement,'SubTyp',(order==0)?1:0)
 					break;
-			    case 'th_variable-table_4':
+			    case 'div_th_variable-table_4':
 			        that.renderVariables(rootElement,'Unit',(order==0)?1:0)
 					break;
 		    }

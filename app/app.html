@@ -17,30 +17,49 @@
     </div>
     </div>
   </header>
-  <div class="window-content">
+  <div class="window-content" id="main">
     <div class="pane-group" id="main_group"><div class="pane-sm sidebar" id="sidebar"></div>
   </div>
   </div>
-  <footer class="toolbar toolbar-footer" id="footer_pane" style="max-height:30%;overflow-x: scroll">
-  	<div class="toolbar-actions" style="width:100%">
-      <div class="form-group" style="float:left;width:33%;max-width: 33%">
+  <footer class="toolbar toolbar-footer" id="footer_pane" style="height:30%">
+  	<div class="toolbar-actions" style="width:100%;height:100%;margin-bottom:5px;">
+      <div class="form-group" style="float:left;width:33%;max-width: 33%;height:100%;">
 		  <span id="properties_label"></span><br />
-		  <div style="" id="element_properties"></div>
+		  <div id="element_properties" style="height:100%;overflow-y: auto"></div>
 	  </div>
       
-      <div class="form-group" style="margin-left:20px;float:left;width:33%;max-width: 33%">
+      <div class="form-group" style="margin-left:20px;margin-bottom:5px;float:left;width:33%;max-width: 33%;height:100%">
 		  <span id="action_label"></span><br />
-		  <div id="element_action" style="overflow: scroll"></div>
+		  <div id="element_action" style="height:100%;overflow-y: auto"></div>
 	  </div>
 	  
-	  <div class="form-group" style="margin-left:20px;float:left;width:25%;max-width: 25%;">
+	  <div class="form-group" style="margin-left:20px;margin-bottom:5px;float:left;width:25%;max-width: 25%;">
 		  <span id="method_label"></span><br />
 		  <div id="method_result"></div>
 	  </div>
 	  
   </div>
-  </footer>    
+  </footer>  
 </div>
   <script src="app.js"></script>
-</body>
+  <script src="split.js"></script>
+  <script type="text/javascript">
+  	var sizes = localStorage.getItem('split-sizes')
+  	
+  	if (sizes) {
+    		sizes = JSON.parse(sizes)
+	} else {
+    	sizes = [80, 20]  // default sizes
+	}
+  	
+  	var split = Split(['#main', '#footer_pane'], {
+   		 direction: 'vertical',
+   		 sizes: sizes,
+   		 onDragEnd: function () {
+   		 	localStorage.setItem('split-sizes', JSON.stringify(split.getSizes()));
+    	 }
+	})
+
+	  </script>
+  </body>
 </html>

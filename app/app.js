@@ -244,13 +244,14 @@ ipc.on('send_clipboard',(event,arg) => {
 ipc.on('describe_function',(event,arg)=> {
 	
 	// Build the 3rd footer column
-	var script =  arg;
+	var script =  arg.script;
 	new CCUTreeRenderer(ccuIP,ccu).renderScriptMethodTestResult(script,undefined);
-
-	ccu.sendScriptAndParseAll(script,function(result,variables){
-	  let strresult = (variables && (variables.testObject))?variables.testObject:result;
-	  new CCUTreeRenderer(ccuIP,ccu).renderScriptMethodTestResult(script,strresult);
-  	});
+	if (arg.execute) {
+		ccu.sendScriptAndParseAll(script,function(result,variables){
+			let strresult = (variables && (variables.testObject))?variables.testObject:result;
+			new CCUTreeRenderer(ccuIP,ccu).renderScriptMethodTestResult(script,strresult);
+  		});
+  	}
 });
 
 ipc.on('run_script', (event, arg) => {

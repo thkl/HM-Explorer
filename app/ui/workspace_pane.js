@@ -54,7 +54,7 @@ class WorkspacePane {
 			  classNames:['editor_main']
 		},[
 			
-			new brightwheel.FormGroup({attributes: {id: 'group-dev1',style:'width:100%;height:100%'},classNames: ['pull-left']}, [
+			new brightwheel.FormGroup({attributes: {id: 'group-dev1',style:'width:100%;height:100%;margin-left: -10px;margin-bottom:20px'},classNames: ['pull-left']}, [
 				new brightwheel.Label({attributes: {id: 'label-1', style:'width:100%;'},classNames: ['my-class'],text: 'Script'}, []),
 				new brightwheel.Textarea({attributes: {id: 'script_text', style:'width:100%;height:90%'},classNames: ['my-class'],
 					placeholder: 'WriteLine("Hello World");',text: 'WriteLine("Hello World");'
@@ -79,12 +79,12 @@ class WorkspacePane {
 		);
 
 
-		scriptFormItems.push(new brightwheel.Label({attributes: {id: 'label-2', style:'width:100%'},classNames: ['my-class'],
+		scriptFormItems.push(new brightwheel.Label({attributes: {id: 'label-2', style:'width:100%;margin-top:10px'},classNames: ['my-class'],
 			text: 'Ausgabe'
 		}, []));
 
 		
-		scriptFormItems.push(new brightwheel.Textarea({attributes: {id: 'script-response', style:'width:100%;height:30%'},classNames: ['my-class'],
+		scriptFormItems.push(new brightwheel.Textarea({attributes: {id: 'script-response', style:'width:100%;height:20%'},classNames: ['my-class'],
 			placeholder: '',
 			text: ''
 		}, []));
@@ -128,9 +128,6 @@ class WorkspacePane {
 			}
 			
 		});
-		
-		
-		
 	}
 	
 	
@@ -139,7 +136,7 @@ class WorkspacePane {
 		let panes = [];
 		panes.push(new brightwheel.Pane({attributes: {id: 'pane_ccu_rssi'},
 			  sidebar: false
-		}, [new brightwheel.NavGroup({attributes: {id: 'ccu_rssi'}}, [])]));
+		}, [new brightwheel.NavGroup({attributes: {id: 'ccu_rssi' },classNames : ['sticky-table-container']}, [])]));
 
 		let root = this.clearElement(rootElement);
 		panes.map(function(pane){
@@ -152,7 +149,7 @@ class WorkspacePane {
 		let panes = [];
 		panes.push(new brightwheel.Pane({attributes: {id: 'pane_ccu_variables'},
 			  sidebar: false
-		}, [new brightwheel.NavGroup({attributes: {id: 'ccu_variables'}}, [])]));
+		}, [new brightwheel.NavGroup({attributes: {id: 'ccu_variables'},classNames : ['sticky-table-container']}, [])]));
 
 		let root = this.clearElement(rootElement);
 		panes.map(function(pane){

@@ -77,8 +77,8 @@ class CCU {
 	addInterface(interf) {
 		let t_intf = this.interfaceWithID(interf.id);
 		if (t_intf) {
-			let idx = this.interfaces.indexOf(interf);
-			this.interfaces.slice(idx);
+			let idx = this.interfaces.indexOf(t_intf);
+			this.interfaces.splice(idx,1);
 		}
 		this.interfaces.push(interf);
 	}
@@ -88,7 +88,7 @@ class CCU {
 		let t_channel = this.channelWithID(channel.id);
 		if (t_channel) {
 			let idx = this.channels.indexOf(t_channel);
-			this.channels.slice(idx);
+			this.channels.splice(idx,1);
 		}
 		this.channels.push(channel);
 	}
@@ -99,7 +99,7 @@ class CCU {
 		let t_datapoint = this.datapointWithID(datapoint.id);
 		if (t_datapoint) {
 			let idx = this.dataPoints.indexOf(t_datapoint);
-			this.dataPoints.slice(idx);
+			this.dataPoints.splice(idx,1);
 		}
 		this.dataPoints.push(datapoint);
 	}
@@ -189,7 +189,6 @@ class CCU {
 				json.interfaces.map(function(interfc){
 					that.addInterface(interfc);
 				});
-
 				if (callback) {
 					callback();
 				}

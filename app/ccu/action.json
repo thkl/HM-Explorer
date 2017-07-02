@@ -1,12 +1,12 @@
 {
   "common" : [{
 	  
-	  ".ID()" : "Ermittelt die ID des Objektes (readonly)",
-	  ".Name()" : "Ermittelt den Namen des Objectes (rw)",
-	  ".Type()" : "Ermittelt den Objekttypen",
-	  ".TypeName()" : "Ermittelt den Namen des Objekttypen",
-	  ".IsTypeOf(OT_DEVICE)":"Ermittelt ob das Objet dem Typ OT_DEVICE (bsp) entspricht",
-	  ".State()":"Liefert den Zustand des Objektes"
+	  ".ID()" : {"hint" : "Ermittelt die ID des Objektes (readonly)" },
+	  ".Name()" : {"hint" : "Ermittelt den Namen des Objectes (rw)"},
+	  ".Type()" : {"hint" : "Ermittelt den Objekttypen"},
+	  ".TypeName()" : {"hint" : "Ermittelt den Namen des Objekttypen"},
+	  ".IsTypeOf(OT_DEVICE)": {"hint" : "Ermittelt ob das Objet dem Typ OT_DEVICE (bsp) entspricht"},
+	  ".State()": {"hint" : "Liefert den Zustand des Objektes"}
 	  
 	  }],	
 	
@@ -14,81 +14,80 @@
 	
   "interface": [{
 	  
-	  ".InterfaceInfo()" : "Ermittelt die Bescheibung des Interfaces",
-      ".InterfaceUrl()" : "Zeigt die RPC URL an"	  
+	  ".InterfaceInfo()" : {"hint" : "Ermittelt die Bescheibung des Interfaces"},
+      ".InterfaceUrl()" : {"hint" : "Zeigt die RPC URL an" } 
       
 	  }],
 	  
    "device": [{
-	   ".Channels()" : "Liste der Kanaele (Tab getrennt)",
-	   ".Channels().Count()":"Anzahl Kanaele",
-	   ".Channels().EnumIDs()" : "Liste der Kanal IDs",
-	   ".Channels().EnumUsedIDs()" : "Liste der IDs von benutzen Kanaelen",
-	   ".Channels().EnumEnabledIDs()" : "Liste der aktiven Kanaele",
-	   ".Channels().EnumNames()" : "Liste der Kanalnamen",
-	   ".Channels().EnumUsedNames()" : "Liste der Namen von benutzen Kanaelen",
-	   ".Channels().EnumEnabledVisibleIDs()" : "Liste der ativen sichtbaren Kanaele",
-	   ".Channels().EnumEnabledNames()":"Liste der aktiven Kanalnamen",
-	   ".Interface()" : "ID des Geraeteinterfaces",
-	   ".Enabled()" : "Geraet aktiv ?",
-	   ".Used()" : "Geraet ist in Benutzung",
-	   ".EnumMetaData()" : "Liste der ",
-	   ".Internal()" : "Geraet ist intern",
-	   ".ReadyConfig()" : "Geraet wurde fertig konfiguriert",
-	   ".ReadyConfigChns()" : "Kanaele wurden fertig konfiguriert",
-	   ".Unerasable()" : "Geraet kann nicht geloescht werden",
-	   ".Visible()" : "Geraet ist sichtbar",
-	   ".UserAccessRights(xxx)" : "Zugriffsrechte der Gruppe xxx",
-	   ".Interface()":"Ermittelt das Interface (ID) des Geraetes",
-	   ".Address()":"Ermittelt die Adresse(Seriennummer)",
-	   ".HssType()":"Liefert die Kurzbezeichnung des HomeMatic Geraetetyps"	   
-	   
+	   ".Channels()" : {"hint" : "Liste der Kanaele (Tab getrennt)"},
+	   ".Channels().Count()":{"hint" : "Anzahl Kanaele"},
+	   ".Channels().EnumIDs()" : {"hint" : "Liste der Kanal IDs"},
+	   ".Channels().EnumUsedIDs()" : {"hint" : "Liste der IDs von benutzen Kanaelen"},
+	   ".Channels().EnumEnabledIDs()" : {"hint" : "Liste der aktiven Kanaele"},
+	   ".Channels().EnumNames()" : {"hint" : "Liste der Kanalnamen"},
+	   ".Channels().EnumUsedNames()" : {"hint" : "Liste der Namen von benutzen Kanaelen"},
+	   ".Channels().EnumEnabledVisibleIDs()" : {"hint" : "Liste der ativen sichtbaren Kanaele"},
+	   ".Channels().EnumEnabledNames()":{"hint" : "Liste der aktiven Kanalnamen"},
+	   ".Interface()" : {"hint" : "ID des Geraeteinterfaces"},
+	   ".Enabled()" : {"hint" : "Geraet aktiv ?"},
+	   ".Used()" : {"hint" : "Geraet ist in Benutzung"},
+	   ".EnumMetaData()" : {"hint" : "Liste der "},
+	   ".Internal()" : {"hint" : "Geraet ist intern"},
+	   ".ReadyConfig()" : {"hint" : "Geraet wurde fertig konfiguriert"},
+	   ".ReadyConfigChns()" : {"hint" : "Kanaele wurden fertig konfiguriert"},
+	   ".Unerasable()" : {"hint" : "Geraet kann nicht geloescht werden"},
+	   ".Visible()" : {"hint" : "Geraet ist sichtbar"},
+	   ".UserAccessRights(xxx)" : {"hint" : "Zugriffsrechte der Gruppe xxx"},
+	   ".Interface()":{"hint" : "Ermittelt das Interface (ID) des Geraetes"},
+	   ".Address()":{"hint" : "Ermittelt die Adresse(Seriennummer)"},
+	   ".HssType()":{"hint" : "Liefert die Kurzbezeichnung des HomeMatic Geraetetyps"}	   
 	   }],
 	   
     "channel": [{
-	   ".Device()" : "Liefert die ID des Geraet des Kanals",
-	   ".DPs()":"Liste der Datenpunkte des Kanals",
-	   ".Interface()":"Ermittelt das Interface des Kanals",
-	   ".Address()":"Ermittelt die Adresse",
-	   ".DPByHssDP(xx)":"Liefert das Datenpunktobjekt des Kanals mit dem Namen xx",
-	   ".ChnFunction()":"Liefert die Gewerke denen der Kanal zugeordnet ist",
-	   ".ChnRoom()":"Liefert die Raeume denen der Kanal zugeordnet ist",
-	   ".ChnArchive()":"Ermittelt ob der Kanal protokoliert wird",
-	   ".ChnAESActive()":"Liefert die Info ob der Kanal verschluesselt sendet",
-	   ".ChnDirection()":"Liefert die Kategorie (1 = Sender , 2 = Empfaenger)",
-	   ".DPs().EnumUsedNames()":"Listet die Namen der Datenpunkte auf"
+	   ".Device()" : {"hint" : "Liefert die ID des Geraet des Kanals"},
+	   ".DPs()":{"hint" : "Liste der Datenpunkte des Kanals"},
+	   ".Interface()":{"hint" : "Ermittelt das Interface des Kanals"},
+	   ".Address()":{"hint" : "Ermittelt die Adresse"},
+	   ".DPByHssDP(xx)":{"hint" : "Liefert das Datenpunktobjekt des Kanals mit dem Namen xx"},
+	   ".ChnFunction()":{"hint" : "Liefert die Gewerke denen der Kanal zugeordnet ist"},
+	   ".ChnRoom()":{"hint" : "Liefert die Raeume denen der Kanal zugeordnet ist"},
+	   ".ChnArchive()":{"hint" : "Ermittelt ob der Kanal protokoliert wird"},
+	   ".ChnAESActive()":{"hint" : "Liefert die Info ob der Kanal verschluesselt sendet"},
+	   ".ChnDirection()":{"hint" : "Liefert die Kategorie (1 = Sender , 2 = Empfaenger)"},
+	   ".DPs().EnumUsedNames()":{"hint" : "Listet die Namen der Datenpunkte auf"}
 	}], 
 	
 	"datapoint": [{
-	  ".ValueType()" : "Ermittelt den Typ des Wertes fuer den Datenpunkt",
-	  ".Channel()" : "Ermittelt die ID des Kanals des Datenpunktes",
-	  ".Value()" : "Ermittelt den der CCU zuletzt bekannten Wert des DP",
-	  ".LastValue()" : "Ermittelt den vor der letzten Akt. gueltigen Wert des DP ",
-	  ".Operations()" : "Liefert die Operationen die der DP erlaubt",
-	  ".Timestamp()" : "Ermittelt den Zeitpunkt der letzten Aenderung",
-	  ".State(0)" : "Setzt den Status des DP neu (Bsp. 0)"
+	  ".ValueType()" : {"hint" : "Ermittelt den Typ des Wertes fuer den Datenpunkt"},
+	  ".Channel()" : {"hint" : "Ermittelt die ID des Kanals des Datenpunktes"},
+	  ".Value()" : {"hint" : "Ermittelt den der CCU zuletzt bekannten Wert des DP"},
+	  ".LastValue()" : {"hint" : "Ermittelt den vor der letzten Akt. gueltigen Wert des DP "},
+	  ".Operations()" : {"hint" : "Liefert die Operationen die der DP erlaubt"},
+	  ".Timestamp()" : {"hint" : "Ermittelt den Zeitpunkt der letzten Aenderung"},
+	  ".State(0)" : {"hint" : "Setzt den Status des DP neu (Bsp. 0)","execute":false}
 	}],
 	
 	"variable": [{
 	  
-	  ".DPInfo()" : "Gibt die ID des zugeordneten Datenpunktes zurueck",
-	  ".Unerasable()": "Ermittelt ob die Variable geloescht werden kann",
-	  ".ValueType()":"Liefert den Typ der Variable",
-	  ".ValueSubType()":"Liefert den Subtyp der Variable",
-	  ".ValueUnit()":"Ermittelt die Einheit der Variable",
-	  ".ValueName0()":"Liefert den Klartext fuer den Wert 'falsch'",
-	  ".ValueName1()":"Liefert den Klartext fuer den Wert 'wahr'",
-	  ".ValueList()":"Ermittelt die Werteliste",
-	  ".ValueMin()":"Liefert den minimalen Wert",
-	  ".ValueMax()":"Liefert den maximalen Wert",
-	  ".Channel()":"Liefert die ID des zugeordneten Kanals"
+	  ".DPInfo()" : {"hint" : "Gibt die ID des zugeordneten Datenpunktes zurueck"},
+	  ".Unerasable()": {"hint" : "Ermittelt ob die Variable geloescht werden kann"},
+	  ".ValueType()":{"hint" : "Liefert den Typ der Variable"},
+	  ".ValueSubType()":{"hint" : "Liefert den Subtyp der Variable"},
+	  ".ValueUnit()":{"hint" : "Ermittelt die Einheit der Variable"},
+	  ".ValueName0()":{"hint" : "Liefert den Klartext fuer den Wert \"falsch\""},
+	  ".ValueName1()":{"hint" : "Liefert den Klartext fuer den Wert \"wahr\""},
+	  ".ValueList()":{"hint" : "Ermittelt die Werteliste"},
+	  ".ValueMin()":{"hint" : "Liefert den minimalen Wert"},
+	  ".ValueMax()":{"hint" : "Liefert den maximalen Wert"},
+	  ".Channel()":{"hint" : "Liefert die ID des zugeordneten Kanals"}
       
 	}],
 	
 	"script": [{
 	  
-	  "Write('Hello World')" : "Gibt den Text Hello World aus",
-	  "foreach (Element,Liste) { }":"Durchlaeuft Liste fuer jedes Element"
+	  "Write(\"Hello World\")" : {"hint" : "Gibt den Text Hello World aus"},
+	  "foreach (Element,Liste) { }":{"hint" : "Durchlaeuft Liste fuer jedes Element"}
       
 	}]
 

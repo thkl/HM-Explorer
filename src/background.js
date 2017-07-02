@@ -107,6 +107,8 @@ app.on('ready', () => {
   const mainWindow = createWindow('main', {
     width: 1000,
     height: 600,
+    minWidth:1000,
+    minHeight:600
   });
 
   mainWindow.loadURL(url.format({
@@ -150,7 +152,7 @@ app.on('ready', () => {
 		dialog.showMessageBox(mainWindow,{
           type: 'info',
           title: 'You are up todate',
-          buttons: ['Yihaa #Covfefe !'],
+          buttons: ['Yihaa !'],
           message: 'You are running the latest and greatest version of Homematic Explorer.'
         })
 	}
