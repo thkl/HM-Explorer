@@ -81,7 +81,7 @@ class CCUTreeRenderer {
 	   document.querySelector("#properties_label").innerHTML = "Details Interface " + intf.name
 	   let myTable = this.clearElement("#element_properties")
 	   myTable.appendChild(propTable.element)
-	   this.renderCommandScreen('Methoden des Interface Objektes','dom.GetObject('+intf.id+')',['common','interface'])
+	   this.renderCommandScreen('Methoden des Interface-Objektes','dom.GetObject('+intf.id+')',['common','interface'])
 	   this.renderScriptMethodTestResult(undefined,undefined)
    }
 
@@ -282,7 +282,7 @@ class CCUTreeRenderer {
 	   let myTable = this.clearElement("#element_properties")
 	   myTable.appendChild(propTable.element)
 	   
-	   this.renderCommandScreen('Methoden des Datapoint Objektes','dom.GetObject('+dp.id+')',['common','datapoint'])
+	   this.renderCommandScreen('Methoden des Datapoint-Objektes','dom.GetObject('+dp.id+')',['common','datapoint'])
 	   this.renderScriptMethodTestResult(undefined,undefined)
    }
 
@@ -319,10 +319,10 @@ class CCUTreeRenderer {
 	   
 	   var propElements = [];
 	   
-	   propElements.push({property:"ID",value:channel.id})
-	   propElements.push({property:"Name",value:channel.name})
-	   propElements.push({property:"Typ",value:channel.type})
-	   propElements.push({property:"Adresse",value:channel.address})
+	   propElements.push({'Eigenschaft':"ID",'Wert':channel.id})
+	   propElements.push({'Eigenschaft':"Name",'Wert':channel.name})
+	   propElements.push({'Eigenschaft':"Typ",'Wert':channel.type})
+	   propElements.push({'Eigenschaft':"Adresse",'Wert':channel.address})
 
 	   let propTable = new Table({attributes: {id: 'table-object-properties'},classNames: ['my-class'],striped: true},propElements );
 	   
@@ -352,7 +352,7 @@ class CCUTreeRenderer {
 		   }
 
 	   })
-	   this.renderCommandScreen('Methoden des Channel Objektes','dom.GetObject('+channel.id+')',['common','channel'])
+	   this.renderCommandScreen('Methoden des Channel-Objektes','dom.GetObject('+channel.id+')',['common','channel'])
 	   this.renderScriptMethodTestResult(undefined,undefined)
 	} else {
 	   let myNode = this.clearElement(rootElement)
