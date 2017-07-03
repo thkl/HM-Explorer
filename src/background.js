@@ -5,17 +5,23 @@
 
 import path from 'path';
 import url from 'url';
-import { app, Menu,dialog} from 'electron';
+import { remote,app, Menu,dialog, Tray } from 'electron';
 import { devMenuTemplate } from './menu/dev_menu_template';
 import { editMenuTemplate } from './menu/edit_menu_template';
 import createWindow from './helpers/window';
 const updater = require('asar-updater')
+
+
+
 // Special module holding environment variables which you declared
 // in config/env_xxx.json file.
 import env from './env';
+
 var pjson = require(__dirname +'/../package.json');
 var updateManifest;
-
+let appIcon = null
+var mainWindow;
+var appShouldClose = false
 
 const setApplicationMenu = (update) => {
 
@@ -40,7 +46,7 @@ const mainMenuTemplate = {
    },
    {label : 'Version ' + pjson.version},
    {label: 'Check for Updates',click: () => {updater.checkForUpdates()}},
-   {label: 'Quit',accelerator: 'CmdOrCtrl+Q',click: () => {app.quit();},
+   {label: 'Quit',accelerator: 'CmdOrCtrl+Q',click: () => {appShouldClose=true;app.quit();},
   }],
  };
 
@@ -87,10 +93,14 @@ const mainMenuTemplate = {
         
       }
     }
-  }]})
+  }]}
+  )
   }
-  Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
+
 };
+
+
 
 
 // Save userData in separate folders for each environment.
@@ -101,23 +111,66 @@ if (env.name !== 'production') {
   app.setPath('userData', `${userDataPath} (${env.name})`);
 }
 
-app.on('ready', () => {
-  setApplicationMenu();
-  console.log('Path Delimiter %s',path.sep)
-  const mainWindow = createWindow('main', {
+
+const buildMainWindow = () => {
+  mainWindow = createWindow('main', {
     width: 1000,
     height: 600,
     minWidth:1000,
     minHeight:600
   });
-
+  
+   // Build Main Window
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'app.html'),
     protocol: 'file:',
     title: "Homematic Explorer",
     slashes: true,
   }));
+}
 
+
+app.on('ready', () => {
+  setApplicationMenu();
+  console.log('Path Delimiter %s',path.sep)
+  buildMainWindow()  
+
+
+
+  // set Tray Menu
+  const iconPath = path.join(__dirname,(process.platform === 'win32') ? 'win':'mac','img','iconTemplate.png')
+  appIcon = new Tray(iconPath)
+  const contextMenu = Menu.buildFromTemplate([
+  {
+    label: 'Homematic Explorer',
+    click: function () {
+	    if (mainWindow) {
+	  mainWindow.show()
+		    
+	    } else {
+		  buildMainWindow()  
+	    }
+    }
+  },
+  {
+    label: 'Homematic WebGUI',
+    click: function () {
+	   let web = mainWindow.webContents;
+       web.send('open_ccu_url','http://$ccuhost$/')
+    }
+  },
+  {
+    label: 'Beenden',
+    click: function () {
+	  appShouldClose = true
+      app.quit()
+    }
+  }])
+  
+  appIcon.setToolTip('Electron Demo in the tray.')
+  appIcon.setContextMenu(contextMenu)  
+
+ 
   if (env.name === 'development') {
     mainWindow.openDevTools();
   }
@@ -166,6 +219,33 @@ app.on('ready', () => {
   updater.setFeedURL('', updateURL)
 });
 
-app.on('window-all-closed', () => {
-  app.quit();
+
+app.on('before-quit', () => {
+  appShouldClose=true;
+  
 });
+
+
+
+app.on('will-quit', () => {
+  console.log('will-quit')
+});
+
+app.on('window-all-closed', () => {
+	if (appShouldClose) {
+		app.quit();
+	}
+	mainWindow = null
+})
+
+
+const ipc = require('electron').ipcMain
+
+ipc.on('http_error', function (event, arg) {
+  dialog.showMessageBox(mainWindow,{
+          type: 'error',
+          title: 'Uhhhh',
+          buttons: ['That sucks !'],
+          message: 'Error while connecting to ccu.'
+  })
+})

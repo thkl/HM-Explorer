@@ -104,13 +104,14 @@ document.addEventListener('click', supportExternalLinks, false);
 const env = jetpack.cwd(__dirname).read('env.json', 'json');
 
 // Here is the starting point for your application code.
-
+// Remeber this is running in the rendering process
 // Small helpers you might want to keep
 const app = electron.remote.app;
 const appDir = jetpack.cwd(app.getAppPath());
 const dialog = require('electron').dialog;
 const ipc = electron.remote.ipcMain;
 
+const ipcr = require('electron').ipcRenderer;
 
 
 const Store = require('./store.js');
@@ -225,14 +226,21 @@ ipc.on('show_interface', (event, arg) => {
 });
 
 ipc.on('test_script', (event, arg) => {
-  
   ccu.testScript(arg,function(result,variables){
 	  if (result=='') {
 		  result = 'Schaut ok aus ....';
 	  }
 	  new CCUTreeRenderer(ccuIP,ccu).renderScriptOutput(result,[]);
   });
-  
+});
+
+ipcr.on('open_ccu_url', (event, arg) => {
+	console.log("Open URL");
+  let ccuIP = document.querySelector('#ccu_ip').value;
+  if (ccuIP) {
+	  let url = arg.replace('$ccuhost$', ccuIP);
+		electron.shell.openExternal(url);
+  }
 });
 
 
@@ -256,7 +264,7 @@ ipc.on('describe_function',(event,arg)=> {
 
 ipc.on('run_script', (event, arg) => {
   
-  ccu.sendScriptAndParseAll(arg,function(result,variables){
+  ccu.sendScriptAndParseAll(arg,20,function(result,variables){
 	  new CCUTreeRenderer(ccuIP,ccu).renderScriptOutput(result,variables);
   });
   

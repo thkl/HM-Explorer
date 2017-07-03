@@ -31,7 +31,7 @@ class CCUCommunication {
 	   });
 	}
 	
-	sendRegaCommand(script,callback) {
+	sendRegaCommand(script,call_timeout,callback) {
 		var encoding = require("encoding");
 		script = encoding.convert(script, "binary");
 		var that = this;
@@ -51,9 +51,8 @@ class CCUCommunication {
 		var request = http.request(options, function(response) {
 		var data = '';
 	
-		response.setEncoding("binary");
+  	   response.setEncoding("binary");
 
-	
 		response.on('data', function(chunk) {
       	  data += chunk.toString();
       	});
@@ -63,12 +62,21 @@ class CCUCommunication {
 	 	   var tx = (data.substring(0, pos));
 	 	   var vars = data.substr(pos);
 	 	   console.log('CCU Rega Response :%s',tx);
-	 	   	callback(tx,vars);
+	 	   	callback(tx,vars,null);
 	 	   });
 
 		}).on('error', function(e) {
 	      console.error(e);
+	      callback(null,null,e);
 		});
+
+		request.on('socket', function (socket) {
+			socket.setTimeout(call_timeout * 1000); 
+			socket.on('timeout', function() {
+				request.abort();
+    		});
+		});
+
 
 		request.write(script);
 		request.end();

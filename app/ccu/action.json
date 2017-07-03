@@ -53,7 +53,7 @@
 	   ".ChnFunction()":{"hint" : "Liefert die Gewerke denen der Kanal zugeordnet ist"},
 	   ".ChnRoom()":{"hint" : "Liefert die Räume denen der Kanal zugeordnet ist"},
 	   ".ChnArchive()":{"hint" : "Ermittelt ob der Kanal protokoliert wird"},
-	   ".ChnäSActive()":{"hint" : "Liefert die Info ob der Kanal verschlüsselt sendet"},
+	   ".ChnAESActive()":{"hint" : "Liefert die Info ob der Kanal verschlüsselt sendet"},
 	   ".ChnDirection()":{"hint" : "Liefert die Kategorie (1 = Sender , 2 = Empfänger)"},
 	   ".DPs().EnumUsedNames()":{"hint" : "Listet die Namen der Datenpunkte auf"}
 	}], 

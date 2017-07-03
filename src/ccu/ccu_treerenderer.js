@@ -222,7 +222,7 @@ class CCUTreeRenderer {
 	   propElements.push({'Eigenschaft':"Typ",'Wert':device.type})
 	   propElements.push({'Eigenschaft':"Adresse",'Wert':device.address})
 	   propElements.push({'Eigenschaft':"Erstellt",'Wert':device.creatingCompleted})
-	   propElements.push({'Eigenschaft':"aktiv",'Wert':device.enabled})
+	   propElements.push({'Eigenschaft':"Aktiv",'Wert':device.enabled})
 	   propElements.push({'Eigenschaft':"Intern",'Wert':device.internal})
 	   propElements.push({'Eigenschaft':"Gerät konfiguriert",'Wert':device.readyConfig})
 	   propElements.push({'Eigenschaft':"Kanäle konfiguriert",'Wert':device.readyConfigChannels})
@@ -258,7 +258,7 @@ class CCUTreeRenderer {
 		   }
 
 	   })
-	   this.renderCommandScreen('Methoden des Device Objektes','dom.GetObject('+device.id+')',['common','device'])
+	   this.renderCommandScreen('Methoden des Device-Objektes','dom.GetObject('+device.id+')',['common','device'])
 	   this.renderScriptMethodTestResult(undefined,undefined)
 	}
    }

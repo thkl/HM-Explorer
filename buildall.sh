@@ -4,9 +4,9 @@ npm run build
 echo "Creating bundle"
 npm run bundle
 echo "Packaging darwin and win"
-electron-packager pack HM_Explorer --platform=darwin --overwrite --asar
-electron-packager pack HM_Explorer --platform=win32 --overwrite --asar
-electron-packager pack HM_Explorer32Bit --platform=win32 --arch=ia32 --overwrite --asar
+npm run package-mac
+npm run package-win
+npm run package-win32
 echo "Removing old distribution files"
 rm dist/*
 echo "Creating darwin dmg"

@@ -1,11 +1,11 @@
 // Here is the starting point for your application code.
-
+// Remeber this is running in the rendering process
 // Small helpers you might want to keep
 import './helpers/context_menu.js';
 import './helpers/external_links.js';
 
 
-import { remote } from 'electron';
+import { remote,shell } from 'electron';
 import jetpack from 'fs-jetpack';
 import env from './env';
 
@@ -14,6 +14,7 @@ const appDir = jetpack.cwd(app.getAppPath())
 const dialog = require('electron').dialog
 const ipc = remote.ipcMain
 
+const ipcr = require('electron').ipcRenderer
 
 
 const Store = require('./store.js')
@@ -134,14 +135,21 @@ ipc.on('show_interface', (event, arg) => {
 })
 
 ipc.on('test_script', (event, arg) => {
-  
   ccu.testScript(arg,function(result,variables){
 	  if (result=='') {
 		  result = 'Schaut ok aus ....';
 	  }
 	  new CCUTreeRenderer(ccuIP,ccu).renderScriptOutput(result,[])
   })
-  
+})
+
+ipcr.on('open_ccu_url', (event, arg) => {
+	console.log("Open URL")
+  let ccuIP = document.querySelector('#ccu_ip').value
+  if (ccuIP) {
+	  let url = arg.replace('$ccuhost$', ccuIP)
+		shell.openExternal(url)
+  }
 })
 
 
@@ -165,7 +173,7 @@ ipc.on('describe_function',(event,arg)=> {
 
 ipc.on('run_script', (event, arg) => {
   
-  ccu.sendScriptAndParseAll(arg,function(result,variables){
+  ccu.sendScriptAndParseAll(arg,20,function(result,variables){
 	  new CCUTreeRenderer(ccuIP,ccu).renderScriptOutput(result,variables)
   })
   

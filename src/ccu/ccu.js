@@ -1,3 +1,5 @@
+const ipc = require('electron').ipcRenderer
+
 class CCU {
 	
 
@@ -10,6 +12,8 @@ class CCU {
 	   this.channels = []
 	   this.dataPoints = []
 	   this.variables = []
+	   this.defaultTimeOut = 5 
+	   this.loadDeviceTimeOut = 10 
 	}
 	
 	deviceWithID(deviceId) {
@@ -181,7 +185,7 @@ class CCU {
 		
 		script = script +'Write(\'}\');} Write(\']}\');';
 		
-		this.sendScript(script,function(result){
+		this.sendScript(script,this.defaultTimeOut,function(result){
 			try {
 				let json = JSON.parse(result)
 				json.interfaces.map(function(interfc){
@@ -216,7 +220,7 @@ class CCU {
 		
 		script = script +'Write(\'}\');} Write(\']}\');';
 		
-		this.sendScript(script,function(result){
+		this.sendScript(script,this.loadDeviceTimeOut,function(result){
 			try {
 				let json = JSON.parse(result)
 				that.variables = json.variables
@@ -250,7 +254,7 @@ class CCU {
 
 		script = script +'Write(\'}\');}}Write(\']}\');';
 
-		this.sendScript(script,function(result){
+		this.sendScript(script,this.loadDeviceTimeOut,function(result){
 			try {
 				let json = JSON.parse(result)
 				that.devices = json.devices
@@ -279,7 +283,7 @@ class CCU {
 		
 		script = script + 'Write(\'}\');}Write(\']}\');'
 		var that = this
-		this.sendScript(script,function(result){
+		this.sendScript(script,this.defaultTimeOut,function(result){
 			try {
 				let json = JSON.parse(result)
 				device.channels = json.channels
@@ -313,7 +317,7 @@ class CCU {
 		
 		script = script + 'Write(\'}\');}Write(\']}\');'
 		var that = this
-		this.sendScript(script,function(result){
+		this.sendScript(script,this.defaultTimeOut,function(result){
 			try {
 				let json = JSON.parse(result)
 				channel.datapoints = json.datapoints
@@ -333,7 +337,7 @@ class CCU {
     testScript(script,callback) {
 	    script = script.split('\'').join('\\\'');
 	    let command = 'var tx = \'' + script + '\'; Write( system.SyntaxCheck(tx, \'\', \'\',\'\'));';
-	    this.communication.sendRegaCommand(command,function(result,variables){
+	    this.communication.sendRegaCommand(command,this.defaultTimeOut,function(result,variables){
 		try {
 		   if (callback) {
 				callback(result,variables)
@@ -344,9 +348,10 @@ class CCU {
 		})	
     }
 
-    sendScript(script,callback) {
+    sendScript(script,timeout,callback) {
 	   
-	   this.communication.sendRegaCommand(script,function(result,variables){
+	   this.communication.sendRegaCommand(script,timeout,function(result,variables,error){
+		if (!error) {
 		try {
 		   if (callback) {
 				callback(result,variables)
@@ -354,12 +359,16 @@ class CCU {
 	      } catch (e) {
 		    console.error(e)
 		  }
+		} else {
+			console.log("Communication Error")
+			ipc.send('http_error',error)
+		}
 		})		
 	}
 	
 	
-	sendScriptAndParseAll(script,callback) {   
-	   this.sendScript(script,function(result,variables){
+	sendScriptAndParseAll(script,timeout,callback) {   
+	   this.sendScript(script,timeout,function(result,variables){
 		   var parseString = require('xml2js').parseString;
 		   parseString(variables, function (err, vresult) {
 	 		callback(result,vresult.xml)

@@ -49,6 +49,10 @@
   border-spacing: 0;
   width: 100%;
 }
+tr.active {
+  color: #fff;
+  background-color: #116cd6;
+}
 .sticky-table td + td {
   border-left: 1px solid #eee;
 }
