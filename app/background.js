@@ -255,7 +255,7 @@ electron.app.on('ready', () => {
 
 
   // set Tray Menu
-  const iconPath = path.join(__dirname,(process.platform === 'win32') ? 'win':'mac','img','iconTemplate.png');
+  const iconPath = path.join(__dirname,'img',(process.platform === 'win32') ? 'win':'mac','iconTemplate.png');
   appIcon = new electron.Tray(iconPath);
   const contextMenu = electron.Menu.buildFromTemplate([
   {
