@@ -167,7 +167,7 @@ app.on('ready', () => {
     }
   }])
   
-  appIcon.setToolTip('Electron Demo in the tray.')
+  appIcon.setToolTip('Homematic Explorer')
   appIcon.setContextMenu(contextMenu)  
 
  
