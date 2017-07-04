@@ -5,12 +5,12 @@
 
 import path from 'path';
 import url from 'url';
-import { remote,app, Menu,dialog, Tray } from 'electron';
+import { remote,app, Menu,dialog, Tray,shell } from 'electron';
 import { devMenuTemplate } from './menu/dev_menu_template';
 import { editMenuTemplate } from './menu/edit_menu_template';
 import createWindow from './helpers/window';
 const updater = require('asar-updater')
-
+const Store = require('./store.js')
 
 
 // Special module holding environment variables which you declared
@@ -22,6 +22,8 @@ var updateManifest;
 let appIcon = null
 var mainWindow;
 var appShouldClose = false
+var store = null 
+
 
 const setApplicationMenu = (update) => {
 
@@ -48,10 +50,10 @@ const mainMenuTemplate = {
    {label: 'Check for Updates',click: () => {updater.checkForUpdates()}},
    {label: 'Quit',accelerator: 'CmdOrCtrl+Q',click: () => {appShouldClose=true;app.quit();},
   }],
- };
+ }
 
 
-  const menus = [mainMenuTemplate,editMenuTemplate];
+const menus = [mainMenuTemplate,editMenuTemplate];
   if (env.name !== 'production') {
     menus.push(devMenuTemplate);
   }
@@ -132,10 +134,14 @@ const buildMainWindow = () => {
 
 app.on('ready', () => {
   setApplicationMenu();
-  console.log('Path Delimiter %s',path.sep)
+  let store = new Store({
+	configName: 'user-preferences',
+	defaults: {
+    	ccuIP: ''
+  	}
+  })
+  
   buildMainWindow()  
-
-
 
   // set Tray Menu
   const iconPath = path.join(__dirname,'img',(process.platform === 'win32') ? 'win':'mac','iconTemplate.png')
@@ -145,8 +151,7 @@ app.on('ready', () => {
     label: 'Homematic Explorer',
     click: function () {
 	    if (mainWindow) {
-	  mainWindow.show()
-		    
+			mainWindow.show()
 	    } else {
 		  buildMainWindow()  
 	    }
@@ -155,8 +160,8 @@ app.on('ready', () => {
   {
     label: 'Homematic WebGUI',
     click: function () {
-	   let web = mainWindow.webContents;
-       web.send('open_ccu_url','http://$ccuhost$/')
+	   let ccuIP = store.get('ccuIP');
+	   shell.openExternal('http://'+ccuIP + '/')
     }
   },
   {

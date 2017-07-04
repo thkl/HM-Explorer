@@ -129,7 +129,7 @@ const env = jetpack.cwd(__dirname).read('env.json', 'json');
 // window from here.
 
 const updater = require('asar-updater');
-
+const Store = require('./store.js');
 
 
 // Special module holding environment variables which you declared
@@ -139,7 +139,6 @@ var updateManifest;
 let appIcon = null;
 var mainWindow;
 var appShouldClose = false;
-
 const setApplicationMenu = (update) => {
 
 const mainMenuTemplate = {
@@ -168,7 +167,7 @@ const mainMenuTemplate = {
  };
 
 
-  const menus = [mainMenuTemplate,editMenuTemplate];
+const menus = [mainMenuTemplate,editMenuTemplate];
   if (env.name !== 'production') {
     menus.push(devMenuTemplate);
   }
@@ -249,10 +248,14 @@ const buildMainWindow = () => {
 
 electron.app.on('ready', () => {
   setApplicationMenu();
-  console.log('Path Delimiter %s',path.sep);
+  let store = new Store({
+	configName: 'user-preferences',
+	defaults: {
+    	ccuIP: ''
+  	}
+  });
+  
   buildMainWindow();  
-
-
 
   // set Tray Menu
   const iconPath = path.join(__dirname,'img',(process.platform === 'win32') ? 'win':'mac','iconTemplate.png');
@@ -262,8 +265,7 @@ electron.app.on('ready', () => {
     label: 'Homematic Explorer',
     click: function () {
 	    if (mainWindow) {
-	  mainWindow.show();
-		    
+			mainWindow.show();
 	    } else {
 		  buildMainWindow();  
 	    }
@@ -272,8 +274,8 @@ electron.app.on('ready', () => {
   {
     label: 'Homematic WebGUI',
     click: function () {
-	   let web = mainWindow.webContents;
-       web.send('open_ccu_url','http://$ccuhost$/');
+	   let ccuIP = store.get('ccuIP');
+	   electron.shell.openExternal('http://'+ccuIP + '/');
     }
   },
   {
@@ -284,7 +286,7 @@ electron.app.on('ready', () => {
     }
   }]);
   
-  appIcon.setToolTip('Electron Demo in the tray.');
+  appIcon.setToolTip('Homematic Explorer');
   appIcon.setContextMenu(contextMenu);  
 
  

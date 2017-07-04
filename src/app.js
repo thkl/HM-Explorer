@@ -164,7 +164,7 @@ ipc.on('describe_function',(event,arg)=> {
 	var script =  arg.script
 	new CCUTreeRenderer(ccuIP,ccu).renderScriptMethodTestResult(script,undefined)
 	if (arg.execute) {
-		ccu.sendScriptAndParseAll(script,function(result,variables){
+		ccu.sendScriptAndParseAll(script,20,function(result,variables){
 			let strresult = (variables && (variables.testObject))?variables.testObject:result
 			new CCUTreeRenderer(ccuIP,ccu).renderScriptMethodTestResult(script,strresult)
   		})

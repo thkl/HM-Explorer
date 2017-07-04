@@ -84,7 +84,7 @@ class CCUTreeRenderer {
 	   document.querySelector("#properties_label").innerHTML = "Details Interface " + intf.name;
 	   let myTable = this.clearElement("#element_properties");
 	   myTable.appendChild(propTable.element);
-	   this.renderCommandScreen('Methoden des Interface Objektes','dom.GetObject('+intf.id+')',['common','interface']);
+	   this.renderCommandScreen('Methoden des Interface-Objektes','dom.GetObject('+intf.id+')',['common','interface']);
 	   this.renderScriptMethodTestResult(undefined,undefined);
    }
 
@@ -285,7 +285,7 @@ class CCUTreeRenderer {
 	   let myTable = this.clearElement("#element_properties");
 	   myTable.appendChild(propTable.element);
 	   
-	   this.renderCommandScreen('Methoden des Datapoint Objektes','dom.GetObject('+dp.id+')',['common','datapoint']);
+	   this.renderCommandScreen('Methoden des Datapoint-Objektes','dom.GetObject('+dp.id+')',['common','datapoint']);
 	   this.renderScriptMethodTestResult(undefined,undefined);
    }
 
@@ -322,10 +322,10 @@ class CCUTreeRenderer {
 	   
 	   var propElements = [];
 	   
-	   propElements.push({property:"ID",value:channel.id});
-	   propElements.push({property:"Name",value:channel.name});
-	   propElements.push({property:"Typ",value:channel.type});
-	   propElements.push({property:"Adresse",value:channel.address});
+	   propElements.push({'Eigenschaft':"ID",'Wert':channel.id});
+	   propElements.push({'Eigenschaft':"Name",'Wert':channel.name});
+	   propElements.push({'Eigenschaft':"Typ",'Wert':channel.type});
+	   propElements.push({'Eigenschaft':"Adresse",'Wert':channel.address});
 
 	   let propTable = new brightwheel.Table({attributes: {id: 'table-object-properties'},classNames: ['my-class'],striped: true},propElements );
 	   
@@ -355,7 +355,7 @@ class CCUTreeRenderer {
 		   }
 
 	   });
-	   this.renderCommandScreen('Methoden des Channel Objektes','dom.GetObject('+channel.id+')',['common','channel']);
+	   this.renderCommandScreen('Methoden des Channel-Objektes','dom.GetObject('+channel.id+')',['common','channel']);
 	   this.renderScriptMethodTestResult(undefined,undefined);
 	} else {
 	   let myNode = this.clearElement(rootElement);
@@ -655,27 +655,7 @@ class CCUTreeRenderer {
 		   		
 	   		}
 	   		
-	   		switch (parseInt(variable.subtype)) {
-		   		case 23:
-		   		   strValueSubType = 'Anwesenheit';
-		   		   break;
-		   		case 6:
-		   		   strValueSubType = 'Alarm';
-		   		   break;
-		   		case 0:
-		   		   strValueSubType = 'Zahl';
-		   		   break;
-		   		case 2:
-		   		   strValueSubType = 'Logikwert';
-		   		   break;
-		   		case 29:
-		   		   strValueSubType = 'Werteliste';
-		   		   break;
-		   		case 11:
-		   		   strValueSubType = 'Zeichenkette';
-		   		   break;
-		   		
-	   		}
+	   	    strValueSubType = that.ccu.strValueForVarSubType(variable.subtype);
 
 			varElements.push({
 				   'Id':{attributes:{'id':'0_' + variable.name}, text:parseInt(variable.id)},
@@ -756,8 +736,7 @@ class CCUTreeRenderer {
 		  		(colid.indexOf('2_')>-1) || (colid.indexOf('3_')>-1) || 
 		  		(colid.indexOf('4_')>-1) || (colid.indexOf('5_')>-1)) {
 		  		let selectedVariable = colid.substr(2);
-		  		that.renderCommandScreen('Methoden des Variablen-Objektes ' + selectedVariable,'dom.GetObject(ID_SYSTEM_VARIABLES).Get("'+
-		  		selectedVariable +'")',['common','variable']);
+		  		that.variableInfo(that.ccu.variableWithName(selectedVariable));
 		  	}
 	   };
 	   
@@ -765,6 +744,34 @@ class CCUTreeRenderer {
 	   this.renderCommandScreen('Methoden des Variablen-Objektes','dom.GetObject(ID_SYSTEM_VARIABLES).Get("Variablename")',['common','variable']);
        this.renderScriptMethodTestResult(undefined,undefined);
    }
+   
+   variableInfo(variable) {
+	   var propElements = []; 
+	   let strSubType = this.ccu.strValueForVarSubType(variable.subtype);
+	   let strValueType = this.ccu.strValueForValueType(variable.valuetype);
+	   
+	   propElements.push({'Eigenschaft':"ID",'Wert':variable.id});
+	   propElements.push({'Eigenschaft':"Name",'Wert':variable.name});
+	   propElements.push({'Eigenschaft':"Typ",'Wert':variable.valuetype+ ' ' + strValueType});
+	   propElements.push({'Eigenschaft':"SubTyp",'Wert':variable.subtype + ' ' + strSubType});
+	   propElements.push({'Eigenschaft':"Einheit",'Wert':variable.unit });
+	   propElements.push({'Eigenschaft':"WerteName1",'Wert':variable.valname0});
+	   propElements.push({'Eigenschaft':"WerteName2",'Wert':variable.valname1});
+	   propElements.push({'Eigenschaft':"WerteListe",'Wert':variable.vallist});
+	   propElements.push({'Eigenschaft':"Minimum",'Wert':variable.min});
+	   propElements.push({'Eigenschaft':"Maximum",'Wert':variable.max});
+ 	   propElements.push({'Eigenschaft':"geb. an Kanal",'Wert':variable.chnl});
+
+	   let propTable = new brightwheel.Table({attributes: {id: 'table-object-properties'},classNames: ['my-class'],striped: true},propElements );
+	   document.querySelector("#properties_label").innerHTML = "Details Variable " + variable.name;
+
+	   let myTable = this.clearElement("#element_properties");
+	   myTable.appendChild(propTable.element);
+	   
+	   this.renderCommandScreen('Methoden des Variablen-Objektes','dom.GetObject(ID_SYSTEM_VARIABLES).Get("'+variable.name+'")',['common','variable']);
+       this.renderScriptMethodTestResult(undefined,undefined);
+   }
+
 
 }
 	

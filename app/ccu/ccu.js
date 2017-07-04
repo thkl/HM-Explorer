@@ -108,6 +108,16 @@ class CCU {
 		this.dataPoints.push(datapoint);
 	}
 	
+	variableWithName(varname) {
+		var result;
+		this.variables.map(function (variable){
+			if (variable.name==varname) {
+				result = variable;
+			}
+		});
+		return result
+	}
+	
 	setHost(hostname) {
 	   this.ccuIp = hostname;
 	   this.communication.ccuIp = hostname;
@@ -410,6 +420,31 @@ class CCU {
 				break
 		}
 	}
+
+	strValueForVarSubType(subtype) {
+		switch (parseInt(subtype)) {
+		   	case 23:
+		   		return 'Anwesenheit'
+		   		break
+		   	case 6:
+		   		return 'Alarm'
+		   		break
+		   	case 0:
+		   	    return 'Zahl'
+		   	    break
+		   	case 2:
+		   		return 'Logikwert'
+		   		break
+		   	case 29:
+		   		return 'Werteliste'
+		   		break
+		   	case 11:
+		   		return 'Zeichenkette'
+		   		break	
+	   	}
+		return 'keiner'		
+	}
+
 
 }
 
