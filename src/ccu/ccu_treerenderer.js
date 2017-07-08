@@ -485,7 +485,8 @@ class CCUTreeRenderer {
 	   		if (element.Out.text==65536) {element.Out.text='k.Info'}
 	   })
 	   
-	   let propTable = new Table({attributes: {id: 'rssi-table', sticky:true },classNames: ['sticky-table'],striped: true},rssiElements);
+	   let columns = ['20%','20%','40%','10%','9%']
+	   let propTable = new Table({attributes: {id: 'rssi-table', sticky:true, columnwidth:columns },classNames: ['sticky-table'],striped: true},rssiElements);
 	   
 	   let myTable = this.clearElement(rootElement)
 	   myTable.appendChild(propTable.element)

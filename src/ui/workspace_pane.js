@@ -186,7 +186,7 @@ class WorkspacePane {
 		
 		new NavGroup({attributes: {id: 'ccu_event' },classNames : ['sticky-table-container']}, [
 			
-			new Textarea({attributes: {id: 'ccu_event_list', style:'width:100%;height:99%'},classNames: ['my-class'],
+			new Textarea({attributes: {id: 'ccu_event_list', style:'width:100%;height:95%'},classNames: ['my-class'],
 					placeholder: '',text: ''
 				}, [])
 			

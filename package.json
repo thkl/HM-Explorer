@@ -2,7 +2,7 @@
   "name": "hm-explorer",
   "productName": "Homematic Explorer",
   "description": "A Desktop App for HM device investigation",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "author": "thkl <th.kluge@me.com>",
   "copyright": "c 2017",
   "homepage": "https://github.com/thkl/HM-Explorer",
