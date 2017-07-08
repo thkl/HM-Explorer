@@ -1,6 +1,9 @@
-import { Pane,NavGroup,FormGroup,Label,Textarea,Table,Button } from 'brightwheel'
+import { Pane,NavGroup,FormGroup,Label,Textarea,Table,Button,Toolbar } from 'brightwheel'
 const ipc = require('electron').ipcRenderer
-
+const {remote} = require('electron');
+const Menu = remote.Menu;
+const MenuItem = remote.MenuItem;
+  
 class WorkspacePane {
 	
 	constructor(contentname) {
@@ -8,6 +11,18 @@ class WorkspacePane {
 	}
 	
 	
+	dropDownMenu(target, template) {
+    	var menu = Menu.buildFromTemplate(template);
+	    var targetBounds = target.getBoundingClientRect();
+		var res = menu.popup({
+			x: targetBounds.left,
+			y: targetBounds.top + targetBounds.height + 6,
+			async: true
+    	});
+		return menu;
+    }
+	
+		
 	render(rootElement) {
 		switch (this.contentname) {
 			
@@ -34,6 +49,10 @@ class WorkspacePane {
 			case 'dutycycle':
 			  this.renderDutyCycleContentPane(rootElement)
 			  break;  
+			  
+			case 'events':
+			  this.renderEventsContentPane(rootElement)
+			  break;    
 		}
 		
 		this.clearElement("#element_properties")
@@ -53,16 +72,11 @@ class WorkspacePane {
 			
 			new FormGroup({attributes: {id: 'group-dev1',style:'width:100%;height:100%;margin-left: -10px;margin-bottom:20px'},classNames: ['pull-left']}, [
 				new Label({attributes: {id: 'label-1', style:'width:100%;'},classNames: ['my-class'],text: 'Script'}, []),
+				
 				new Textarea({attributes: {id: 'script_text', style:'width:100%;height:90%'},classNames: ['my-class'],
 					placeholder: 'WriteLine("Hello World");',text: 'WriteLine("Hello World");'
 				}, [])
 			]) 
-/*
-			new FormGroup({attributes: {id: 'group-dev1',style:'width:10%;height:100%'},classNames: ['pull-left']}, [
-				new Label({attributes: {id: 'label-2', style:'width:100%;'},classNames: ['my-class'],text: 'Geraete'}, []),
-				new NavGroup({attributes: {id: 'script_tree'}}, [])
-			])
-*/
 		]))
 		
 		scriptFormItems.push(new Button({attributes: {id: 'checkButton',style:'float: left;'},classNames: ['active'], icon: 'check',
@@ -141,6 +155,74 @@ class WorkspacePane {
 		})
 	}
 	
+	renderEventsContentPane(rootElement,interfaceList) {	
+		let panes = []
+		let ifbutton = new Button({attributes: {id: 'IfButton',style:'float: left;'},classNames: ['active','btn-dropdown'],
+			size: 'large',  
+			text: 'Interface',  type: 'default'}, [])
+
+		let toolbarChilds = [
+
+			ifbutton,
+			
+			new Button({attributes: {id: 'RunButton',style:'float: left;'},classNames: ['active'],
+			size: 'large',  
+			icon: 'play',
+			type: 'default'}, []),
+
+			new Button({attributes: {id: 'StopButton',style:'float: left;'},classNames: ['active'],
+			size: 'large',  
+			icon: 'stop',
+			type: 'default'}, []),
+
+		]
+		
+		panes.push(new Pane({attributes: {id: 'pane_ccu_event'},
+			  sidebar: false
+		}, 
+		
+		[new Toolbar({attributes: {id: 'bar-1',},classNames: ['my-class'], type: 'header'}, toolbarChilds ),
+
+		
+		new NavGroup({attributes: {id: 'ccu_event' },classNames : ['sticky-table-container']}, [
+			
+			new Textarea({attributes: {id: 'ccu_event_list', style:'width:100%;height:99%'},classNames: ['my-class'],
+					placeholder: '',text: ''
+				}, [])
+			
+		])]))
+
+		let root = this.clearElement(rootElement)
+		panes.map(function(pane){
+			root.appendChild(pane.element)
+		})
+		
+		var that = this
+		var ifMenu = []
+		
+		interfaceList.map(function (interf){
+			ifMenu.push({label:interf.name,click:function(){
+				document.querySelector("#IfButton").innerHTML = interf.name
+				ipc.send('set_event_interface', interf.name)
+			}})
+		})
+		
+		
+		document.querySelector("#IfButton").addEventListener("click", function() {
+          that.dropDownMenu(this,ifMenu);
+        });
+        
+        
+        document.querySelector("#RunButton").addEventListener("click", function() {
+          ipc.send('start_eventListener', null)
+        });
+
+        document.querySelector("#StopButton").addEventListener("click", function() {
+          ipc.send('end_eventListener', null)
+        });
+        
+	}
+
 	
 	renderVariableContentPane(rootElement) {	
 		let panes = []

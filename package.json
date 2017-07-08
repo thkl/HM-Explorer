@@ -2,10 +2,11 @@
   "name": "hm-explorer",
   "productName": "Homematic Explorer",
   "description": "A Desktop App for HM device investigation",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "author": "thkl <th.kluge@me.com>",
   "copyright": "c 2017",
-  "homepage": "http://example.com",
+  "homepage": "https://github.com/thkl/HM-Explorer",
+  "bugs":"https://github.com/thkl/HM-Explorer/issues",
   "license": "MIT",
   "main": "app/background.js",
   "build": {
@@ -33,8 +34,8 @@
     "package-mac": "electron-packager pack HM_Explorer --platform=darwin --icon=app/img/mac/icon.icns --overwrite --asar",
     "package-win": "electron-packager pack HM_Explorer --platform=win32 --overwrite --asar --icon=assets/icons/win/icon.ico --version-string.CompanyName=kSquare --version-string.FileDescription=HomeMaticExplorer --version-string.ProductName=\"HomeMatic Explorer\"",
 
-    "package-win32": "electron-packager pack HM_Explorer32Bit --platform=win32 --overwrite --asar --arch=ia32 --icon=assets/icons/win/icon.ico --version-string.CompanyName=kSquare --version-string.FileDescription=HomeMaticExplorer --version-string.ProductName=\"HomeMatic Explorer\""
-    
+    "package-win32": "electron-packager pack HM_Explorer32Bit --platform=win32 --overwrite --asar --arch=ia32 --icon=assets/icons/win/icon.ico --version-string.CompanyName=kSquare --version-string.FileDescription=HomeMaticExplorer --version-string.ProductName=\"HomeMatic Explorer\"",
+    "build-updatedescription":"node tasks/build_updatedescription.js"
     
   },
   "dependencies": {

@@ -1,6 +1,8 @@
 (function () {'use strict';
 
 const ipc = require('electron').ipcRenderer;
+const { URL } = require('url');
+
 
 class CCU {
 	
@@ -16,6 +18,7 @@ class CCU {
 	   this.variables = [];
 	   this.defaultTimeOut = 5; 
 	   this.loadDeviceTimeOut = 10; 
+	   this.eventInterface = null;
 	}
 	
 	deviceWithID(deviceId) {
@@ -61,7 +64,7 @@ class CCU {
 	interfaceWithName(interfaceName) {
 		var result;
 		this.interfaces.map(function (ointerface){
-			if (ointerface.Name==interfaceName) {
+			if (ointerface.name==interfaceName) {
 				result = ointerface;
 			}
 		});
@@ -84,6 +87,15 @@ class CCU {
 			let idx = this.interfaces.indexOf(t_intf);
 			this.interfaces.splice(idx,1);
 		}
+		
+		// replace xmlrpc just for parsing
+		let myUrl = interf.url;
+		myUrl = myUrl.replace('xmlrpc_bin://', 'http://');
+		myUrl = myUrl.replace('xmlrpc://', 'http://');
+		let iurl = new URL(myUrl);
+		interf.path = iurl.pathname;
+		interf.host = (iurl.hostname == '127.0.0.1') ? this.ccuIp : iurl.hostname;
+		interf.port = iurl.port;
 		this.interfaces.push(interf);
 	}
 	
@@ -136,13 +148,11 @@ class CCU {
 	}
 	
 	loadRssiValuesInt(callback) {
-
-		let intf = {type:'BidCos-RF',
-					host:this.ccuIp ,
-					port:2001,
-					path:'/' };
+					
+		var bcintf = this.interfaceWithName('BidCos-RF');
+					
 		var that = this;
-		this.communication.sendInterfaceCommand(intf,'rssiInfo',[],function(error,result){
+		this.communication.sendInterfaceCommand(bcintf,'rssiInfo',[],function(error,result){
 			
 			if (!error) {
 				
@@ -167,13 +177,10 @@ class CCU {
 	}
 	
 	loadDutyCycle(callback) {
-
-		let intf = {type:'BidCos-RF',
-					host:this.ccuIp ,
-					port:2001,
-					path:'/' };
-		var that = this;
-		this.communication.sendInterfaceCommand(intf,'listBidcosInterfaces',[],function(error,result){
+		
+		var bcintf = this.interfaceWithName('BidCos-RF');
+		
+		this.communication.sendInterfaceCommand(bcintf,'listBidcosInterfaces',[],function(error,result){
 			
 			if (!error) {
 				callback(result);
@@ -445,7 +452,13 @@ class CCU {
 		return 'keiner'		
 	}
 
-
+	attacheToInterface(intf,callback) {
+		this.communication.initRPCServer(intf,callback);
+	}
+	
+	detacheFromInterface(intf,callback) {
+		this.communication.killRPCServer(intf,callback);
+	}
 }
 
 module.exports = CCU;

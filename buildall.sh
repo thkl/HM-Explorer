@@ -17,7 +17,7 @@ echo "Old Fashioned zipping action 32bit"
 zip -r -9 -q dist/HM_Explorer32Bit-win32-ia32.zip HM_Explorer32Bit-win32-ia32
 cp HM_Explorer-win32-x64/resources/app.asar dist/update.asar
 	
-node tasks/build_updatedescription.js
+npm run build-updatedescription
 
 gzip dist/update.asar
 

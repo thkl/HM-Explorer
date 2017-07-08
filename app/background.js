@@ -130,6 +130,7 @@ const env = jetpack.cwd(__dirname).read('env.json', 'json');
 
 const updater = require('asar-updater');
 const Store = require('./store.js');
+const ipc = require('electron').ipcMain;
 
 
 // Special module holding environment variables which you declared
@@ -153,7 +154,7 @@ const mainMenuTemplate = {
           type: 'info',
           title: 'About HM-Explorer',
           buttons: ['#Covfefe !'],
-          message: '(c) 2017 by thkl. https://github.com/thkl'
+          message: '(c) 2017 by thkl. https://github.com/thkl - AppIcon by https://github.com/sailor79'
         };
         
         electron.dialog.showMessageBox(focusedWindow, options, function () {});
@@ -341,7 +342,6 @@ electron.app.on('ready', () => {
 
 electron.app.on('before-quit', () => {
   appShouldClose=true;
-  
 });
 
 
@@ -358,7 +358,6 @@ electron.app.on('window-all-closed', () => {
 });
 
 
-const ipc = require('electron').ipcMain;
 
 ipc.on('http_error', function (event, arg) {
   electron.dialog.showMessageBox(mainWindow,{

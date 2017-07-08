@@ -53,6 +53,12 @@
   white-space: nowrap;
   background-color: #f5f5f4;
   padding-bottom: 25px;
+  height: 30px;
+}
+
+.sticky-table th div {
+ height : 30px;
+ width: 100%;
 }
 
 .sticky-table table {
@@ -73,33 +79,21 @@ tr.active {
   padding: 5px 25px;
 }
 
-#th_rssi-table_0 div {
-	width: 100%;
+.table-striped tr:nth-child(even).active {
+    background-color: #116cd6;
 }
 
-#th_variable-table_0 div {
-	width: 100%;
-}
-
-#th_method-table_0 div {
-	width: 100%;
-}
-
-#th_table-object-properties_0 div {
-	width: 100%;	
-}
-
-  .gutter {
+.gutter {
     background-color: #eee;
 
     background-repeat: no-repeat;
     background-position: 50%;
-  }
+}
 
-  .gutter.gutter-horizontal {
+.gutter.gutter-horizontal {
     background-image: url('../img/vertical.png');
     cursor: ew-resize;
-  }
+}
 
 .gutter.gutter-vertical {
     background-image: url('../img/horizontal.png');

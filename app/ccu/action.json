@@ -49,6 +49,7 @@
 	   ".DPs()":{"hint" : "Liste der Datenpunkte des Kanals"},
 	   ".Interface()":{"hint" : "Ermittelt das Interface des Kanals"},
 	   ".Address()":{"hint" : "Ermittelt die Adresse"},
+	   ".HssType()":{"hint" : "Ermittelt den Kanaltypen"},
 	   ".DPByHssDP(xx)":{"hint" : "Liefert das Datenpunktobjekt des Kanals mit dem Namen xx"},
 	   ".ChnFunction()":{"hint" : "Liefert die Gewerke denen der Kanal zugeordnet ist"},
 	   ".ChnRoom()":{"hint" : "Liefert die Räume denen der Kanal zugeordnet ist"},

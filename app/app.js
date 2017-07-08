@@ -124,6 +124,7 @@ const manifest = appDir.read('package.json', 'json');
 
 var ccu = new CCU();
 var lastScript = 'WriteLine("Hello World");';
+var currentEventInterface = null;
 
 const store = new Store({
 	configName: 'user-preferences',
@@ -179,16 +180,26 @@ function getCCURSSI(sort,order) {
 	if (ccuIP) {
 		store.set('ccuIP', ccuIP);
 		ccu.setHost(ccuIP);
+		ccu.loadInterfaces(function(){
 		ccu.loadRssiValues(function(error){
 			if (!error) {
 				new CCUTreeRenderer(ccuIP,ccu).renderRssiInfo('#ccu_rssi',sort,order);
 			}
 		});
+		});
 	} else {
 		dialog.showErrorBox('this will not work','Please enter the ip adress of your ccu');
 	}
 }  
-  
+    
+function killEventServer() {
+	if (currentEventInterface) {
+		ccu.detacheFromInterface(currentEventInterface,function(result,error){
+		  console.log("detache %s %s",result,error);
+		});
+	}
+	
+}
 
 ipc.on('show_device', (event, arg) => {
   var device = ccu.deviceWithID(arg);
@@ -270,7 +281,32 @@ ipc.on('run_script', (event, arg) => {
   
 });
 
+ipc.on('xml_event', (event, arg) => {
+  let txf = document.querySelector("#ccu_event_list");
+  if (txf) {  
+ 	 var tx =  txf.value;
+ 	 tx = tx + '[' + new Date() + '] ' + arg[1] + "." + arg[2] + " -> " + arg[3] + '\n';
+ 	 txf.value = tx;
+ 	 txf.scrollTop = txf.scrollHeight;
+  }
+});
 
+ipc.on('set_event_interface',(event,arg) => {
+	ccu.eventInterface = arg;
+});
+
+ipc.on('start_eventListener',(event,arg) => {
+	let intf = ccu.interfaceWithName(ccu.eventInterface);
+	if (intf) {
+		ccu.attacheToInterface(intf,function(error){
+		   currentEventInterface = intf;
+		});
+	}
+});
+
+ipc.on('end_eventListener',(event,arg) => {
+   killEventServer();
+});
 
 ipc.on('sidebar-click', (event, arg) => {
 	
@@ -281,6 +317,11 @@ ipc.on('sidebar-click', (event, arg) => {
 	if (scriptElement) {
 		lastScript = scriptElement.value;
 	}
+	
+	
+	// Kill eventserver
+	
+	killEventServer();
 	
   switch (arg) {
 	 
@@ -317,14 +358,28 @@ ipc.on('sidebar-click', (event, arg) => {
 	   getCCUVariables();
 	  break;
 	  
+	  case 'navItem-events':
+	  
+		ccu.loadInterfaces(function(){
+			console.log(ccu.interfaces);
+			 new WorkspacePane('events').renderEventsContentPane('#main_group',ccu.interfaces);
+			 let renderer = new CCUTreeRenderer(ccuIP,ccu);
+			 renderer.renderCommandScreen('','',[]);
+			 renderer.renderScriptMethodTestResult(undefined,undefined);
+		});
+		
+	  break
+	  
 	  case 'navItem-dutycycle': 
 	 	new WorkspacePane('dutycycle').render('#main_group');
 	 	var ccuIP = document.querySelector('#ccu_ip').value;
 	  	if (ccuIP) {
 			store.set('ccuIP', ccuIP);
 			ccu.setHost(ccuIP);
+			ccu.loadInterfaces(function(){
 			ccu.loadDutyCycle(function(dcinfo){
 				new CCUTreeRenderer(ccuIP,ccu).renderDCInfo('#ccu_dutycycle',dcinfo);
+			});
 			});
 		} else {
 			dialog.showErrorBox('this will not work','Please enter the ip adress of your ccu');

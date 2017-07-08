@@ -631,6 +631,7 @@ class CCUTreeRenderer {
   renderVariables(rootElement,sortby='Id',order=0) {
 	   var varElements = []; 
 	   var that = this
+	   console.log("Render Variables sort by %s order %s",sortby,order)
 	   this.ccu.variables.map(function(variable){
 
 	   		var strValueType = 'unbekannt'
@@ -699,17 +700,21 @@ class CCUTreeRenderer {
 			
   		   		})
 	   
-	   
-	   let propTable = new Table({attributes: {id: 'variable-table', sticky:true },classNames: ['sticky-table'],striped: true},varElements);
+	   let columns = ['10%','40%','10%','10%','10%','20%']
+	   let propTable = new Table({attributes: {id: 'variable-table', sticky:true , columnwidth:columns},classNames: ['sticky-table'],striped: true},varElements);
 	   let myTable = this.clearElement(rootElement)
 	   myTable.appendChild(propTable.element)
 	   
 	   let sortEventListener = function(event){
 		   // remove Listener to prevent infinity loop 
 		    let colid = event.target.id
+		    let tabLine = event.target.parentNode.id // should be the tr
+		    
+		    console.log("Tab Line %s",tabLine)
 		    
 		    if (colid.indexOf('div_th_variable-table')>-1) {
 	        myTable.removeEventListener('click',sortEventListener)
+	        
 		    switch (event.target.id) {
 			    case 'div_th_variable-table_0':
 			        that.renderVariables(rootElement,'Id',(order==0)?1:0)
@@ -735,6 +740,16 @@ class CCUTreeRenderer {
 		  		let selectedVariable = colid.substr(2)
 		  		that.variableInfo(that.ccu.variableWithName(selectedVariable))
 		  	}
+		  	
+		  	let array = Array.from(document.querySelector("#tbody_variable-table").childNodes);
+			   		array.map(function(node){
+			   		if (node.id == tabLine) {
+						node.classList.add('active')					
+					} else {
+   				    	node.classList.remove('active')
+					}		  
+				})
+		  	
 	   }
 	   
 	   myTable.addEventListener('click',sortEventListener )	
