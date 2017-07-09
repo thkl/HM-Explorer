@@ -23,8 +23,7 @@ var updateManifest;
 let appIcon = null
 var mainWindow;
 var appShouldClose = false
-var store = null 
-
+var usersWindowBounds = {}
 
 const setApplicationMenu = (update) => {
 
@@ -116,12 +115,22 @@ if (env.name !== 'production') {
 
 
 const buildMainWindow = () => {
-  mainWindow = createWindow('main', {
-    width: 1000,
+	
+  var windowSize = { 
+	width: 1000,
     height: 600,
     minWidth:1000,
     minHeight:600
-  });
+  }	
+
+  if (usersWindowBounds) {
+	 windowSize.x = usersWindowBounds.x
+	 windowSize.y = usersWindowBounds.y 
+	 windowSize.width = usersWindowBounds.width
+	 windowSize.height = usersWindowBounds.height
+  }
+	
+  mainWindow = createWindow('main', windowSize );
   
    // Build Main Window
   mainWindow.loadURL(url.format({
@@ -130,17 +139,31 @@ const buildMainWindow = () => {
     title: "Homematic Explorer",
     slashes: true,
   }));
+  
 }
 
 
 app.on('ready', () => {
   setApplicationMenu();
-  let store = new Store({
+ 
+  var store = new Store({
 	configName: 'user-preferences',
 	defaults: {
-    	ccuIP: ''
+    	ccuIP: '',
+    	usersWindowBounds : {}
   	}
   })
+  
+ 
+  try {
+	 let b = store.get('usersWindowBounds')
+	 if (b) {
+		 usersWindowBounds = JSON.parse(b)
+	 }
+  }
+  catch(e) {
+	  console.log("error while reading bounds %s",e)
+  }
   
   buildMainWindow()  
 
@@ -226,6 +249,8 @@ app.on('ready', () => {
 });
 
 
+
+
 app.on('before-quit', () => {
   appShouldClose=true;
 });
@@ -233,10 +258,35 @@ app.on('before-quit', () => {
 
 
 app.on('will-quit', () => {
-  console.log('will-quit')
+
+	if (mainWindow!=null) {
+		usersWindowBounds = mainWindow.getBounds()
+		var store = new Store({
+			configName: 'user-preferences',
+			defaults: {
+				ccuIP: '',
+				usersWindowBounds : {}
+  			}
+  		})
+		store.set('usersWindowBounds',JSON.stringify(usersWindowBounds))
+	}
+	
+	console.log('will-quit')
 });
 
 app.on('window-all-closed', () => {
+	
+	usersWindowBounds = mainWindow.getBounds()
+  	var store = new Store({
+		configName: 'user-preferences',
+		defaults: {
+    		ccuIP: '',
+    		usersWindowBounds : {}
+  		}
+  	})
+
+  	store.set('usersWindowBounds',JSON.stringify(usersWindowBounds))
+	
 	if (appShouldClose) {
 		app.quit();
 	}

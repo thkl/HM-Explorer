@@ -17,6 +17,7 @@ class CCU {
 	   this.defaultTimeOut = 5 
 	   this.loadDeviceTimeOut = 10 
 	   this.eventInterface = null
+	   this.rssiInterface = null
 	}
 	
 	deviceWithID(deviceId) {
@@ -129,8 +130,18 @@ class CCU {
 	}
 	
 	setHost(hostname) {
+		// Kill all stored data	
 	   this.ccuIp = hostname
 	   this.communication.ccuIp = hostname
+	   this.interfaces = []
+	   this.devices = []
+	   this.channels = []
+	   this.dataPoints = []
+	   this.variables = []
+	   this.defaultTimeOut = 5 
+	   this.loadDeviceTimeOut = 10 
+	   this.eventInterface = null
+	   this.rssiInterface = null
 	}
 	
 	loadRssiValues(callback) {
@@ -146,11 +157,21 @@ class CCU {
 	}
 	
 	loadRssiValuesInt(callback) {
-					
-		var bcintf = this.interfaceWithName('BidCos-RF')
-					
+		switch (this.rssiInterface.name) {
+			case 'BidCos-RF':
+			 this.loadRssiValuesBidCos(callback)	
+			 break;		
+			case 'HmIP-RF':
+			 this.loadRssiValuesHMIP(callback)	
+			 break;		
+		}
+	}
+	
+	loadRssiValuesBidCos(callback) {
+		console.log('Load BidCos-RF rssi')
 		var that = this
-		this.communication.sendInterfaceCommand(bcintf,'rssiInfo',[],function(error,result){
+		if (this.rssiInterface) {
+		this.communication.sendInterfaceCommand(this.rssiInterface,'rssiInfo',[],function(error,result){
 			
 			if (!error) {
 				
@@ -172,11 +193,25 @@ class CCU {
 				callback(error)
 			}
 		})
+	    }
 	}
 	
-	loadDutyCycle(callback) {
-		
-		var bcintf = this.interfaceWithName('BidCos-RF')
+	
+	loadRssiValuesHMIP(callback) {
+		// loop thru all Devices
+		var that = this
+		this.devices.map(function(device){
+			device.rssi = []
+			if (device.interf === 'HmIP-RF') {
+				that.communication.sendInterfaceCommand(that.rssiInterface,'getParamset',[device.address + ':0','VALUES'],function(error,result){
+					device.rssi.push({'p':'','db_in':result.RSSI_DEVICE || 65536,'db_out':result.RSSI_PEER || 65536})
+					ipc.send('refresh_rssi_panel','')
+				})
+			}
+		})
+	}
+	
+	loadDutyCycle(bcintf,callback) {
 		
 		this.communication.sendInterfaceCommand(bcintf,'listBidcosInterfaces',[],function(error,result){
 			
@@ -267,7 +302,8 @@ class CCU {
 		script = script + this.scriptPartForElement('readyConfigChannels','oDevice.ReadyConfigChns()',',');
 		script = script + this.scriptPartForElement('locked','oDevice.Unerasable()',',');
 		script = script + this.scriptPartForElement('visible','oDevice.Visible()',',');
-		script = script + this.scriptPartForElement('used','oDevice.Used()');
+		script = script + this.scriptPartForElement('used','oDevice.Used()',',');
+		script = script + this.scriptPartForElement('interf','oInterface');
 
 		script = script +'Write(\'}\');}}Write(\']}\');';
 

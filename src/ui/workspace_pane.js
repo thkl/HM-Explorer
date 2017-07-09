@@ -143,16 +143,44 @@ class WorkspacePane {
 	
 	
 
-	renderRssiContentPane(rootElement) {	
+	renderRssiContentPane(rootElement,interfaceList,selectedIf) {	
 		let panes = []
-		panes.push(new Pane({attributes: {id: 'pane_ccu_rssi'},
+		
+		let ifbutton = new Button({attributes: {id: 'IfButton',style:'float: left;'},classNames: ['active','btn-dropdown'],
+			size: 'large',  
+			text: 'Interface',  type: 'default'}, [])
+			
+		
+		panes.push(new Pane({attributes: {id: 'pane_ccu_rssi',style:'overflow-y:hidden'},
 			  sidebar: false
-		}, [new NavGroup({attributes: {id: 'ccu_rssi' },classNames : ['sticky-table-container']}, [])]))
+		}, 
+		
+		[new Toolbar({attributes: {id: 'bar-rssi',},classNames: ['my-class'], type: 'header'}, [ifbutton]),
+		
+		new NavGroup({attributes: {id: 'ccu_rssi' , style : 'height:calc(100% - 41px)'},classNames : ['sticky-table-container','rssi-table']}, [])]))
 
 		let root = this.clearElement(rootElement)
 		panes.map(function(pane){
 			root.appendChild(pane.element)
 		})
+		
+		var that = this
+		var ifMenu = []
+		
+		interfaceList.map(function (interf){
+			ifMenu.push({label:interf.name,click:function(){
+				document.querySelector("#IfButton").innerHTML = interf.name
+				ipc.send('set_rssi_interface', interf.name)
+			}})
+		})
+		
+		document.querySelector("#IfButton").innerHTML = selectedIf.name
+		
+		document.querySelector("#IfButton").addEventListener("click", function() {
+          console.log('Build Dropdown Menu %s',ifMenu)
+          that.dropDownMenu(this,ifMenu);
+        });
+
 	}
 	
 	renderEventsContentPane(rootElement,interfaceList) {	
@@ -181,7 +209,7 @@ class WorkspacePane {
 			  sidebar: false
 		}, 
 		
-		[new Toolbar({attributes: {id: 'bar-1',},classNames: ['my-class'], type: 'header'}, toolbarChilds ),
+		[new Toolbar({attributes: {id: 'bar-events',},classNames: ['my-class'], type: 'header'}, toolbarChilds ),
 
 		
 		new NavGroup({attributes: {id: 'ccu_event' },classNames : ['sticky-table-container']}, [

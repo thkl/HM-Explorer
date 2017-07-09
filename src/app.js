@@ -44,61 +44,29 @@ const store = new Store({
 
 
 function getCCUDeviceData(){
-	var ccuIP = document.querySelector('#ccu_ip').value
-	if (ccuIP) {
-		store.set('ccuIP', ccuIP);
-		ccu.setHost(ccuIP)
-		ccu.loadDevices(function(){
-			new CCUTreeRenderer(ccuIP,ccu).renderDevices('#ccu_device_tree')
-		})
-	} else {
-		dialog.showErrorBox('this will not work','Please enter the ip adress of your ccu');
-	}
+	ccu.loadDevices(function(){
+		new CCUTreeRenderer(ccuIP,ccu).renderDevices('#ccu_device_tree')
+	})
 }
 
 function getCCUVariables(){
-	var ccuIP = document.querySelector('#ccu_ip').value
-	if (ccuIP) {
-		store.set('ccuIP', ccuIP);
-		ccu.setHost(ccuIP)
-		ccu.loadVariables(function(){
-			new CCUTreeRenderer(ccuIP,ccu).renderVariables('#ccu_variables')
-		})
-	} else {
-		dialog.showErrorBox('this will not work','Please enter the ip adress of your ccu');
-	}
+	ccu.loadVariables(function(){
+		new CCUTreeRenderer(ccuIP,ccu).renderVariables('#ccu_variables')
+	})
 }
 
 
 
 function getCCUInterfaceData(){
-	var ccuIP = document.querySelector('#ccu_ip').value
-	if (ccuIP) {
-		store.set('ccuIP', ccuIP);
-		ccu.setHost(ccuIP)
-		ccu.loadInterfaces(function(){
-			new CCUTreeRenderer(ccuIP,ccu).renderInterfaces('#ccu_interface_tree')
-		})
-	} else {
-		dialog.showErrorBox('this will not work','Please enter the ip adress of your ccu');
-	}
+	ccu.loadInterfaces(function(){
+		new CCUTreeRenderer(ccuIP,ccu).renderInterfaces('#ccu_interface_tree')
+	})
 }
   
 function getCCURSSI(sort,order) {
-	var ccuIP = document.querySelector('#ccu_ip').value
-	if (ccuIP) {
-		store.set('ccuIP', ccuIP);
-		ccu.setHost(ccuIP)
-		ccu.loadInterfaces(function(){
-		ccu.loadRssiValues(function(error){
-			if (!error) {
-				new CCUTreeRenderer(ccuIP,ccu).renderRssiInfo('#ccu_rssi',sort,order)
-			}
-		})
-		})
-	} else {
-		dialog.showErrorBox('this will not work','Please enter the ip adress of your ccu');
-	}
+	ccu.loadRssiValues(function(error){
+		new CCUTreeRenderer(ccuIP,ccu).renderRssiInfo('#ccu_rssi',sort,order)
+	})
 }  
     
 function killEventServer() {
@@ -204,6 +172,19 @@ ipc.on('set_event_interface',(event,arg) => {
 	ccu.eventInterface = arg
 })
 
+
+ipc.on('set_rssi_interface',(event,arg) => {
+	ccu.rssiInterface = ccu.interfaceWithName(arg)
+	getCCURSSI()
+})
+
+
+ipc.on('refresh_rssi_panel',(event,arg) => {
+	new CCUTreeRenderer(ccuIP,ccu).renderRssiInfo('#ccu_rssi',null,0)
+})
+
+
+
 ipc.on('start_eventListener',(event,arg) => {
 	let intf = ccu.interfaceWithName(ccu.eventInterface)
 	if (intf) {
@@ -258,8 +239,17 @@ ipc.on('sidebar-click', (event, arg) => {
 	  break;
 
 	  case 'navItem-rssi':
-	  	new WorkspacePane('rssi').render('#main_group')
-	  	getCCURSSI()
+		ccu.loadInterfaces(function(){
+			if (ccu.rssiInterface == null) {
+				ccu.rssiInterface = ccu.interfaceWithName('BidCos-RF')
+			}
+			// Filter Interfaces rssi only bidcos-rf and HmIP-RF
+			let ifList = ccu.interfaces.filter(function(intf){
+				return ((intf.name === 'BidCos-RF') ||(intf.name === 'HmIP-RF'))
+			})
+		  	new WorkspacePane('rssi').renderRssiContentPane('#main_group',ifList,ccu.rssiInterface)
+		  	getCCURSSI()
+	  	})
 	  break;
 	  
 	  case 'navItem-variable':
@@ -281,18 +271,13 @@ ipc.on('sidebar-click', (event, arg) => {
 	  
 	  case 'navItem-dutycycle': 
 	 	new WorkspacePane('dutycycle').render('#main_group')
-	 	var ccuIP = document.querySelector('#ccu_ip').value
-	  	if (ccuIP) {
-			store.set('ccuIP', ccuIP);
-			ccu.setHost(ccuIP)
-			ccu.loadInterfaces(function(){
-			ccu.loadDutyCycle(function(dcinfo){
-				new CCUTreeRenderer(ccuIP,ccu).renderDCInfo('#ccu_dutycycle',dcinfo)
+	 		ccu.loadInterfaces(function(){
+		 		var bcintf = ccu.interfaceWithName('BidCos-RF')
+
+				ccu.loadDutyCycle(bcintf, function(dcinfo){
+					new CCUTreeRenderer(ccuIP,ccu).renderDCInfo('#ccu_dutycycle',dcinfo)
+				})
 			})
-			})
-		} else {
-			dialog.showErrorBox('this will not work','Please enter the ip adress of your ccu');
-		}
 		break;
   }
 
@@ -304,6 +289,15 @@ if (ccuIP) {
 	 document.querySelector('#ccu_ip').value = ccuIP
 	 ccu.setHost(ccuIP)
 }
+
+document.querySelector('#ccu_ip').addEventListener('change', function(){
+	var ccuIP = document.querySelector('#ccu_ip').value
+	if (ccuIP) {
+		store.set('ccuIP', ccuIP);
+		ccu.setHost(ccuIP)
+	}	
+})
+
 
 new SidebarRenderer().render('#sidebar')
 

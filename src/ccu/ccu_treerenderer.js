@@ -418,8 +418,10 @@ class CCUTreeRenderer {
    renderRssiInfo(rootElement,sortby='Geraet',order=0) {
 	   var rssiElements = []; 
 	   var that = this
+	   var selectedRssiInterface = this.ccu.rssiInterface
 	   this.ccu.devices.map(function(device){
-		   if (device.rssi) {
+
+		   if ((device.rssi) && (device.interf == selectedRssiInterface.name)) {
 			   
 			device.rssi.map(function(rssiInfo) {
 			   
@@ -484,16 +486,17 @@ class CCUTreeRenderer {
 	   		if (element.In.text==65536) {element.In.text='k.Info'}
 	   		if (element.Out.text==65536) {element.Out.text='k.Info'}
 	   })
-	   
-	   let columns = ['20%','20%','40%','10%','9%']
-	   let propTable = new Table({attributes: {id: 'rssi-table', sticky:true, columnwidth:columns },classNames: ['sticky-table'],striped: true},rssiElements);
-	   
 	   let myTable = this.clearElement(rootElement)
-	   myTable.appendChild(propTable.element)
+
+	   if ( rssiElements.length > 0 ) {
+		   let columns = ['20%','20%','40%','10%','9%']
+		   let propTable = new Table({attributes: {id: 'rssi-table', sticky:true, columnwidth:columns },classNames: ['sticky-table'],striped: true},rssiElements);
 	   
-	   let sortEventListener = function(event){
+		   myTable.appendChild(propTable.element)
+	   
+		   let sortEventListener = function(event){
 		   // remove Listener to prevent infinity loop 
-		   console.log("Click at %s",event.target)
+		   	console.log("Click at %s",event.target)
 		    if (event.target.id.indexOf('div_th_rssi-')>-1) {
 	        myTable.removeEventListener('click',sortEventListener)
 		    switch (event.target.id) {
@@ -517,6 +520,7 @@ class CCUTreeRenderer {
 	   }
 	   
 	   myTable.addEventListener('click',sortEventListener )	
+	   }
 	   this.clearCommandScreen()
    }
 
@@ -558,10 +562,10 @@ class CCUTreeRenderer {
  	  })
  	  
  	  let myAction = this.clearElement('#element_action')
-	  
-	  let table = new Table({attributes: {id: 'method-table'},classNames: ['my-class'],striped: true},methodItems)
-	  let te = table.element 
-	  te.addEventListener('click', function(event){
+	  if ((methodItems != null) && (methodItems.length > 0)){
+		  let table = new Table({attributes: {id: 'method-table'},classNames: ['my-class'],striped: true},methodItems)
+		  let te = table.element 
+		  te.addEventListener('click', function(event){
 		  let colid = event.target.id
 		  if ((colid.indexOf('0_')>-1) || (colid.indexOf('1_')>-1)) {
 			  // User has clicked on a row so build the right method command and send back to the main process to run
@@ -572,9 +576,9 @@ class CCUTreeRenderer {
 		  else {
 			  console.log("Click at %s",event.target)
 		  }
-	  })			
-	 			
-	  myAction.appendChild(te)
+	  	})			
+	  	myAction.appendChild(te)
+	  }
   }
 
   renderScriptMethodTestResult(script,result) {
@@ -674,31 +678,31 @@ class CCUTreeRenderer {
 				
 				if (checkA instanceof Object) {checkA = checkA.text}
 				if (checkB instanceof Object) {checkB = checkB.text}
-				
+				if ((checkA != undefined) && (checkB != undefined)) {
 				if ((checkA.constructor.name === 'String') && (checkB.constructor.name === 'String')) {
 				    
 					if (checkA.toUpperCase() < checkB.toUpperCase()) {
-		   				return (order == 0) ? -1 : 1;
+		   				return (order == 0) ? -1 : 1
   					}
   					
   					if (checkA.toUpperCase() > checkB.toUpperCase() ) {
-		   				return (order == 0) ? 1 : -1;
+		   				return (order == 0) ? 1 : -1
   		   			}
-  		   			return 0;
+  		   			return 0
 				
 				} else {
 					
 					if (parseInt(checkA) < parseInt(checkB)) {
-		   				return (order==0)? -1: 1;
+		   				return (order==0)? -1: 1
   					}
   					
   					if (parseInt(checkA) > parseInt(checkB)) {
-  						return (order==0)? 1: -1;
+  						return (order==0)? 1: -1
   		   			}
-  		   			return 0;
+  		   			return 0
 			    }
 
-			
+				} else {return 0}
   		   		})
 	   
 	   let columns = ['10%','40%','10%','10%','10%','20%']
@@ -731,6 +735,9 @@ class CCUTreeRenderer {
 					break;
 			    case 'div_th_variable-table_4':
 			        that.renderVariables(rootElement,'Unit',(order==0)?1:0)
+					break;
+			    case 'div_th_variable-table_5':
+			        that.renderVariables(rootElement,'vallist',(order==0)?1:0)
 					break;
 		    }
 		    }
